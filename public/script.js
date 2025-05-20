@@ -1,5 +1,8 @@
 const socket = io();
+const punchList = document.getElementById("punchList");
 
-socket.on("punchData", (data) => {
-  document.getElementById("value").innerText = `Sensor value: ${data}`;
+socket.on("punch", (punch) => {
+  const li = document.createElement("li");
+  li.textContent = punch;
+  punchList.appendChild(li);
 });
