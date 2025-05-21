@@ -2,16 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Punch Feedback</title>
+  <title>Smart Punching Bag</title>
   <style>
-    body { font-family: sans-serif; background: #111; color: #0f0; text-align: center; margin-top: 50px; }
-    #status { font-size: 2em; }
+    body {
+      background: #111;
+      color: #0f0;
+      font-family: sans-serif;
+      text-align: center;
+      padding-top: 100px;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    #punch {
+      font-size: 3em;
+      margin-bottom: 30px;
+    }
+    #count {
+      font-size: 1.5em;
+    }
   </style>
 </head>
 <body>
-  <h1>🥊 Punches:</h1>
-  <ul id="punchList"></ul>
+  <h1>Smart Punching Bag</h1>
+  <div id="punch">Waiting...</div>
+  <div id="count">Total Punches: 0</div>
+  <div id="ax">X-Axis: 0</div>
+  <div id="ay">Y-Axis: 0</div>
+
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
