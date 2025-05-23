@@ -1,38 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Smart Punching Bag</title>
+  <meta charset="UTF-8">
+  <title>Velostat Data Display</title>
   <style>
-    body {
-      background: #111;
-      color: #0f0;
-      font-family: sans-serif;
-      text-align: center;
-      padding-top: 100px;
-    }
-    h1 {
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-    #punch {
-      font-size: 3em;
-      margin-bottom: 30px;
-    }
-    #count {
-      font-size: 1.5em;
-    }
+    body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+    #value { font-size: 48px; color: #333; }
   </style>
 </head>
 <body>
-  <h1>Smart Punching Bag</h1>
-  <div id="punch">Waiting...</div>
-  <div id="count">Total Punches: 0</div>
-  <div id="ax">X-Axis: 0</div>
-  <div id="ay">Y-Axis: 0</div>
-
+  <h1>Velostat Sensor Value</h1>
+  <div id="value">Waiting...</div>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js"></script>
+  <script>
+    const socket = io();
+    const valueDisplay = document.getElementById("value");
+
+    socket.on("punch", (data) => {
+      if (data && typeof data.value !== "undefined") {
+        valueDisplay.textContent = "Value: " + data.value;
+      } else {
+        valueDisplay.textContent = "Invalid data received";
+      }
+    });
+  </script>
 </body>
 </html>
