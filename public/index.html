@@ -1,31 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Velostat Data Display</title>
+  <meta charset="UTF-8" />
+  <title>Punch Monitor</title>
   <style>
     body { font-family: sans-serif; text-align: center; margin-top: 50px; }
-    .value { font-size: 32px; color: #333; margin: 10px 0; }
+    #punch { font-size: 32px; margin-top: 20px; color: green; }
   </style>
 </head>
 <body>
-  <h1>Velostat Sensor Values</h1>
-  <div class="value" id="right">Right: Waiting...</div>
-  <div class="value" id="left">Left: Waiting...</div>
+  <h1>🧠 Smart Punching Bag</h1>
+  <div id="punch">Waiting for punch...</div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
-    const rightDisplay = document.getElementById("right");
-    const leftDisplay = document.getElementById("left");
+    const punchDisplay = document.getElementById("punch");
 
     socket.on("punch", (data) => {
-      if (data && typeof data.right !== "undefined" && typeof data.left !== "undefined") {
-        rightDisplay.textContent = "Right: " + data.right;
-        leftDisplay.textContent = "Left: " + data.left;
+      if (data && data.type) {
+        punchDisplay.textContent = "👊 " + data.type;
       } else {
-        rightDisplay.textContent = "Invalid data";
-        leftDisplay.textContent = "";
+        punchDisplay.textContent = "❌ Invalid punch received";
       }
     });
   </script>
