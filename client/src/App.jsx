@@ -1,9 +1,9 @@
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
 
-// import Welcome from './screens/Welcome';
+import Welcome from './screens/Welcome';
 // import Tutorial from './screens/Tutorial';
-// import Home from './screens/Home';
+import Home from './screens/Home';
 import Fight from './screens/Fight';
 // import MiniGames from './screens/MiniGames';
 // import Account from './screens/Account';
@@ -16,9 +16,9 @@ function App() {
   return (
     <SocketProvider>
       <Routes>
-        {/* <Route path="/" element={<Welcome />} />
-        <Route path="/tutorial" element={<Tutorial />} />
-        <Route path="/home" element={<Home />} /> */}
+        <Route path="/" element={<Welcome />} />
+        {/* <Route path="/tutorial" element={<Tutorial />} /> */}
+        <Route path="/home" element={<Home />} /> 
         <Route path="/fight" element={<Fight />} />
         {/* <Route path="/minigames" element={<MiniGames />} />
         <Route path="/account" element={<Account />} />
