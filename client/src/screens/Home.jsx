@@ -1,34 +1,37 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Home() {
-  const handleClick = (msg) => alert(msg);
+  const navigate = useNavigate();
 
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <div style={styles.icon} onClick={() => handleClick('User Profile')}>
+        <div style={styles.icon} onClick={() => alert("User Profile")}>
           <span style={styles.iconSymbol}>👤</span>
         </div>
         <h1 style={styles.title}>Menu</h1>
-        <div style={styles.icon} onClick={() => handleClick('Settings')}>
+        <div style={styles.icon} onClick={() => alert("Settings")}>
           <span style={styles.iconSymbol}>⚙️</span>
         </div>
       </div>
 
       <div style={styles.menu}>
-        <button style={styles.button} onClick={() => handleClick('Free Fight')}>
+        <button style={styles.button} onClick={() => navigate('/fight')}>
           Free Fight
         </button>
-        <button style={styles.button} onClick={() => handleClick('Mini-games')}>
+        <button style={styles.button} onClick={() => alert("Mini-games")}>
           Mini-games
         </button>
-        <button style={styles.button} onClick={() => handleClick('Tutorial')}>
+        <button style={styles.button} onClick={() => alert("Tutorial")}>
           Tutorial
         </button>
       </div>
     </div>
   );
 }
+
 
 const styles = {
   container: {

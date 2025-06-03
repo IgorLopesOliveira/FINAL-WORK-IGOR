@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSocket } from "../context/SocketContext";
 
 function Fight() {
@@ -16,6 +17,8 @@ function Fight() {
     setHidePunches(false);
     setFlipLayout(false);
   };
+  const navigate = useNavigate();
+
 
 
   useEffect(() => {
@@ -54,16 +57,20 @@ function Fight() {
   };
 
   const renderConfig = () => (
-    <div className="centered">
-      <h1>Round time</h1>
-      <div className="time-selector">
-        <button onClick={() => setRoundTime((t) => Math.max(1, t - 1))}>-</button>
-        <span>{roundTime} minutes</span>
-        <button onClick={() => setRoundTime((t) => Math.min(10, t + 1))}>+</button>
-      </div>
-      <button onClick={startCountdown}>Start</button>
+  <div className="centered">
+    <div style={{ position: "absolute", top: 20, right: 20 }}>
+      <button onClick={() => navigate("/home")}>↩</button>
     </div>
-  );
+    <h1>Round time</h1>
+    <div className="time-selector">
+      <button onClick={() => setRoundTime((t) => Math.max(1, t - 1))}>-</button>
+      <span>{roundTime} minutes</span>
+      <button onClick={() => setRoundTime((t) => Math.min(10, t + 1))}>+</button>
+    </div>
+    <button onClick={startCountdown}>Start</button>
+  </div>
+);
+
 
   const renderCountdown = () => (
     <div className="centered">
