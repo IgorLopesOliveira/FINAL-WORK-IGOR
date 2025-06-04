@@ -151,21 +151,21 @@ function Memorize() {
     >
       ↩
     </button>
-    <h1>{t("minigames.memorizeTitle")}</h1>
-    <button onClick={startGame}>{t("minigames.start")}</button>
+    <h1>{t("memorize.memorizeTitle")}</h1>
+    <button onClick={startGame}>{t("memorize.start")}</button>
   </div>
 );
 
   const renderShow = () => (
     <div className="focus-mode centered">
-      <h2 style={{ marginBottom: "1rem" }}>{t("minigames.memorizeTitle")}</h2>
+      <h2 style={{ marginBottom: "1rem" }}>{t("memorize.memorizeTitle")}</h2>
       <div style={{ fontSize: "5rem", fontWeight: 900, marginBottom: "4rem" }} className="big-text">{currentDisplay}</div>
     </div>
   );
 
   const renderWait = () => (
     <div className="centered">
-      <h2>{t("minigames.yourTurn")}</h2>
+      <h2>{t("memorize.yourTurn")}</h2>
       <div style={{ fontSize: "5rem", fontWeight: 900 }}className="big-text">{countdown > 0 ? countdown : ""}</div>
     </div>
   );
@@ -183,15 +183,15 @@ function Memorize() {
 
   const renderFail = () => (
     <div className="centered">
-      <h2 style={{ color: "#B44" }}>{t("minigames.wrongPunch")}</h2>
-      <button onClick={resetGame}>{t("minigames.tryAgain")}</button>
+      <h2 style={{ color: "#B44" }}>{t("memorize.wrongPunch")}</h2>
+      <button onClick={resetGame}>{t("memorize.tryAgain")}</button>
     </div>
   );
 
   const renderWin = () => (
     <div className="centered">
-      <h1>{t("minigames.completed")}</h1>
-      <button onClick={resetGame}>{t("minigames.playAgain")}</button>
+      <h1>{t("memorize.completed")}</h1>
+      <button onClick={resetGame}>{t("memorize.playAgain")}</button>
     </div>
   );
 

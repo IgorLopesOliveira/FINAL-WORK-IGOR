@@ -33,7 +33,7 @@
     "switch": "Wisselen",
     "stop": "Stoppen"
   },
-  "minimenu": {
+  "memorize": {
     "memorizeTitle": "Onthoud de combinatie",
     "start": "Start",
     "yourTurn": "Jouw beurt",
@@ -57,7 +57,7 @@
     "playAgain": "Opnieuw spelen",
     "timeLeft": "Resterende tijd"
   },
-  "minigames": {
+  "minimenu": {
     "menuTitle": "Minigames",
     "memorize": "Onthouden",
     "accuracy": "Nauwkeurigheid"

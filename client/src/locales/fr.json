@@ -33,7 +33,7 @@
     "switch": "Changer",
     "stop": "Arrêter"
   },
-  "minimenu": {
+  "memorize": {
     "memorizeTitle": "Mémorise la combinaison",
     "start": "Démarrer",
     "yourTurn": "À ton tour",
@@ -57,7 +57,7 @@
     "playAgain": "Rejouer",
     "timeLeft": "Temps restant"
   },
-  "minigames": {
+  "minimenu": {
     "menuTitle": "Mini-jeux",
     "memorize": "Mémoriser",
     "accuracy": "Précision"
