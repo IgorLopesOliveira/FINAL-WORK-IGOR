@@ -1,6 +1,6 @@
 import { useSocket } from "../context/SocketContext";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const punches = ["Jab", "Left hook", "Uppercut"];
 
@@ -8,80 +8,101 @@ function Memorize() {
   const socket = useSocket();
   const navigate = useNavigate();
 
-  const [phase, setPhase] = useState("menu"); // menu, show, wait, input, success, fail, win
+  const [phase, setPhase] = useState("menu"); // menu, show, wait, input, fail, win
   const [combo, setCombo] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentDisplay, setCurrentDisplay] = useState("");
   const [countdown, setCountdown] = useState(3);
   const [feedback, setFeedback] = useState("");
+  const punchCooldown = 1000;
 
+  // Use ref for lastPunchTime to avoid async state issues
+  const lastPunchTimeRef = useRef(0);
+
+  // Handle punch input
   useEffect(() => {
-  if (!socket || phase !== "input") return;
+    if (!socket || phase !== "input") return;
 
-  const lastPunchTimes = {};
+    const handlePunch = (data) => {
+      const now = Date.now();
 
-  const handlePunch = (data) => {
-    const punch = data.type?.trim().toLowerCase();
-    const expected = combo[currentIndex]?.trim().toLowerCase();
-    const now = Date.now();
+      // Ignore if still within cooldown
+      if (now - lastPunchTimeRef.current < punchCooldown) return;
 
-    // Debounce logic: only accept new punch type if 1000ms passed
-    if (lastPunchTimes[punch] && now - lastPunchTimes[punch] < 1000) {
-      return; // Ignore repeated fast triggers
-    }
+      // Normalize both punch and combo for comparison
+      const punch = (data.type || "").toLowerCase().trim();
+      const expected = (combo[currentIndex] || "").toLowerCase().trim();
 
-    lastPunchTimes[punch] = now;
+      lastPunchTimeRef.current = now;
 
-    if (punch === expected) {
-      setFeedback(combo[currentIndex]); // Show clean display
-      setCurrentIndex((prev) => prev + 1);
-    } else {
-      setFeedback(data.type);
-      setPhase("fail");
-    }
-  };
+      if (punch === expected) {
+        setFeedback(combo[currentIndex]); // Show original case for feedback
+        setCurrentIndex((prev) => prev + 1);
+      } else {
+        setFeedback(data.type); // Show what was received
+        setPhase("fail");
+      }
+    };
 
-  socket.on("punch", handlePunch);
-  return () => socket.off("punch", handlePunch);
-}, [socket, combo, currentIndex, phase]);
+    socket.on("punch", handlePunch);
+    return () => socket.off("punch", handlePunch);
+  }, [socket, combo, currentIndex, phase, punchCooldown]);
 
-
+  // Advance to next round or win after completing combo
   useEffect(() => {
     if (phase === "input" && currentIndex === combo.length && combo.length > 0) {
       setTimeout(() => {
         if (combo.length === 10) {
           setPhase("win");
         } else {
-          nextRound();
+          setTimeout(() => {
+            nextRound();
+          }, 2000); // 2s delay before next combo
         }
-      }, 1000);
+      }, 500); // short delay to display last correct punch
     }
-  }, [currentIndex]);
+  }, [currentIndex, phase, combo.length]);
 
+  // Show combo when phase is "show"
+  useEffect(() => {
+    if (phase === "show" && combo.length > 0) {
+      showCombo(combo);
+    }
+    // eslint-disable-next-line
+  }, [phase, combo]);
+
+  // Add a new punch to the combo, ensuring no repeats
   const nextRound = () => {
-    const newPunch = punches[Math.floor(Math.random() * punches.length)];
-    const newCombo = [...combo, newPunch];
-    setCombo(newCombo);
+    setCombo(prevCombo => {
+      let newPunch;
+      do {
+        newPunch = punches[Math.floor(Math.random() * punches.length)];
+      } while (prevCombo.length > 0 && newPunch === prevCombo[prevCombo.length - 1]);
+      return [...prevCombo, newPunch];
+    });
     setCurrentIndex(0);
     setFeedback("");
-    showCombo(newCombo);
+    setPhase("show");
   };
 
+  // Start the game with the first punch
   const startGame = () => {
     const first = punches[Math.floor(Math.random() * punches.length)];
     setCombo([first]);
     setCurrentIndex(0);
     setFeedback("");
-    showCombo([first]);
+    setPhase("show");
   };
 
+  // Show the combo sequence to the user
   const showCombo = (comboList) => {
-    setPhase("show");
     let i = 0;
+    setCurrentDisplay(comboList[0]);
     const interval = setInterval(() => {
-      setCurrentDisplay(comboList[i]);
       i++;
-      if (i >= comboList.length) {
+      if (i < comboList.length) {
+        setCurrentDisplay(comboList[i]);
+      } else {
         clearInterval(interval);
         setTimeout(() => {
           setPhase("wait");
@@ -91,6 +112,7 @@ function Memorize() {
     }, 1000);
   };
 
+  // Countdown before user input
   const startCountdown = () => {
     setCountdown(3);
     let time = 3;
@@ -102,18 +124,22 @@ function Memorize() {
         setPhase("input");
         setCurrentIndex(0);
         setFeedback("");
+        lastPunchTimeRef.current = 0; // Reset cooldown for new input phase
       }
     }, 1000);
   };
 
+  // Reset the game to the menu
   const resetGame = () => {
     setCombo([]);
     setCurrentIndex(0);
     setCurrentDisplay("");
     setPhase("menu");
     setFeedback("");
+    lastPunchTimeRef.current = 0;
   };
 
+  // Render functions for each phase
   const renderMenu = () => (
     <div className="centered">
       <h1>Memorize the combination</h1>
@@ -137,15 +163,11 @@ function Memorize() {
 
   const renderInput = () => (
     <div className="focus-mode centered">
-      <div
-        className="big-text"
-        style={{
-          color: feedback?.trim().toLowerCase() === combo[currentIndex - 1]?.trim().toLowerCase()
-            ? "#2C2C2C"
-            : "#B44",
-        }}
-      >
+      <div className="big-text">
         {feedback}
+      </div>
+      <div style={{ fontSize: "1.5rem", marginTop: "1rem" }}>
+        {currentIndex}/{combo.length}
       </div>
     </div>
   );
@@ -164,13 +186,13 @@ function Memorize() {
     </div>
   );
 
+  // Main render logic
   if (phase === "menu") return renderMenu();
   if (phase === "show") return renderShow();
   if (phase === "wait") return renderWait();
   if (phase === "input") return renderInput();
   if (phase === "fail") return renderFail();
   if (phase === "win") return renderWin();
-
 
   return (
     <div className="memorize-container">
@@ -199,7 +221,7 @@ function Memorize() {
           padding: 0 1rem;
         }
         .big-text {
-          font-size: 12rem;
+          font-size: 4rem;
           font-weight: 900;
         }
         .focus-mode::before,
@@ -219,19 +241,21 @@ function Memorize() {
           bottom: 0;
         }
         .back-button {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        font-size: 2rem;
-        background: none;
-        border: none;
-        cursor: pointer;
-        z-index: 2;
-        color: #2C2C2C;
-        transition: transform 0.2s ease;
-        } `}
-        </style>
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          font-size: 2rem;
+          background: none;
+          border: none;
+          cursor: pointer;
+          z-index: 2;
+          color: #2C2C2C;
+          transition: transform 0.2s ease;
+        }
+      `}
+      </style>
     </div>
-    );
+  );
 }
+
 export default Memorize;
