@@ -1,31 +1,32 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { useTranslation } from 'react-i18next';
 
 export default function Home() {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <div style={styles.icon} onClick={() => alert("User Profile")}>
+        <div style={styles.icon} onClick={() => alert(t("home.userProfile"))}>
           <span style={styles.iconSymbol}>👤</span>
         </div>
-        <h1 style={styles.title}>Menu</h1>
-        <div style={styles.icon} onClick={() => alert("Settings")}>
+        <h1 style={styles.title}>{t("home.menu")}</h1>
+        <div style={styles.icon} onClick={() => alert(t("home.settings"))}>
           <span style={styles.iconSymbol}>⚙️</span>
         </div>
       </div>
 
       <div style={styles.menu}>
         <button style={styles.button} onClick={() => navigate('/fight')}>
-          Free Fight
+          {t("home.freeFight")}
         </button>
-        <button style={styles.button} onClick={() => alert("Mini-games")}>
-          Mini-games
+        <button style={styles.button} onClick={() => alert(t("home.miniGames"))}>
+          {t("home.miniGames")}
         </button>
-        <button style={styles.button} onClick={() => alert("Tutorial")}>
-          Tutorial
+        <button style={styles.button} onClick={() => alert(t("home.tutorial"))}>
+          {t("home.tutorial")}
         </button>
       </div>
     </div>

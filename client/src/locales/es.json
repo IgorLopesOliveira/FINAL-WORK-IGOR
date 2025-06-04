@@ -1,0 +1,46 @@
+{
+  "welcome": "BIENVENIDO",
+  "toSparx": "a SPARX",
+  "selectLanguage": "Seleccionar idioma",
+  "selectAge": "Seleccionar edad",
+  "chooseLanguage": "Elige un idioma",
+  "chooseAge": "Elige una edad",
+  "confirm": "Confirmar",
+  "tutorial": "Tutorial",
+  "skip": "Saltar",
+  "home": {
+    "menu": "Menú",
+    "freeFight": "Pelea libre",
+    "miniGames": "Minijuegos",
+    "tutorial": "Tutorial",
+    "userProfile": "Perfil de usuario",
+    "settings": "Configuración"
+  },
+  "score": {
+    "results": "Resultados de la pelea",
+    "timeChosen": "Tiempo seleccionado",
+    "seconds": "segundos",
+    "punchesPerMinute": "Golpes por minuto",
+    "punchesByType": "Golpes por tipo",
+    "backToFight": "Volver a la pelea"
+  },
+  "fight": {
+    "roundTime": "Tiempo de ronda",
+    "minutes": "minutos",
+    "start": "Iniciar",
+    "pause": "Pausar",
+    "hide": "Ocultar",
+    "switch": "Cambiar",
+    "stop": "Detener"
+  },
+  "minigames": {
+  "memorizeTitle": "Memoriza la combinación",
+  "start": "Comenzar",
+  "yourTurn": "Tu turno",
+  "wrongPunch": "Golpe incorrecto",
+  "tryAgain": "Intenta de nuevo",
+  "completed": "¡Has completado los 10 golpes!",
+  "playAgain": "Jugar de nuevo"
+}
+
+}

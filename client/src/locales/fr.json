@@ -1,0 +1,46 @@
+{
+  "welcome": "BIENVENUE",
+  "toSparx": "dans SPARX",
+  "selectLanguage": "Sélectionner la langue",
+  "selectAge": "Sélectionner l'âge",
+  "chooseLanguage": "Choisissez une langue",
+  "chooseAge": "Choisissez un âge",
+  "confirm": "Confirmer",
+  "tutorial": "Tutoriel",
+  "skip": "Passer",
+  "home": {
+    "menu": "Menu",
+    "freeFight": "Combat libre",
+    "miniGames": "Mini-jeux",
+    "tutorial": "Tutoriel",
+    "userProfile": "Profil utilisateur",
+    "settings": "Paramètres"
+  },
+  "score": {
+    "results": "Résultats du combat",
+    "timeChosen": "Temps choisi",
+    "seconds": "secondes",
+    "punchesPerMinute": "Coups par minute",
+    "punchesByType": "Coups par type",
+    "backToFight": "Retour au combat"
+  },
+  "fight": {
+    "roundTime": "Durée du round",
+    "minutes": "minutes",
+    "start": "Démarrer",
+    "pause": "Pause",
+    "hide": "Cacher",
+    "switch": "Changer",
+    "stop": "Arrêter"
+  },
+  "minigames": {
+  "memorizeTitle": "Mémorise la combinaison",
+  "start": "Démarrer",
+  "yourTurn": "À ton tour",
+  "wrongPunch": "Mauvais coup",
+  "tryAgain": "Réessayer",
+  "completed": "Tu as complété les 10 coups !",
+  "playAgain": "Rejouer"
+}
+
+}

@@ -1,0 +1,46 @@
+{
+  "welcome": "WELKOM",
+  "toSparx": "bij SPARX",
+  "selectLanguage": "Selecteer taal",
+  "selectAge": "Selecteer leeftijd",
+  "chooseLanguage": "Kies een taal",
+  "chooseAge": "Kies een leeftijd",
+  "confirm": "Bevestigen",
+  "tutorial": "Tutorial",
+  "skip": "Overslaan",
+  "home": {
+    "menu": "Menu",
+    "freeFight": "Vrije gevecht",
+    "miniGames": "Minigames",
+    "tutorial": "Tutorial",
+    "userProfile": "Gebruikersprofiel",
+    "settings": "Instellingen"
+  },
+  "score": {
+    "results": "Gevechtsresultaten",
+    "timeChosen": "Gekozen tijd",
+    "seconds": "seconden",
+    "punchesPerMinute": "Stoten per minuut",
+    "punchesByType": "Stoten per type",
+    "backToFight": "Terug naar gevecht"
+  },
+  "fight": {
+    "roundTime": "Rondetijd",
+    "minutes": "minuten",
+    "start": "Start",
+    "pause": "Pauze",
+    "hide": "Verbergen",
+    "switch": "Wisselen",
+    "stop": "Stoppen"
+  },
+  "minigames": {
+  "memorizeTitle": "Onthoud de combinatie",
+  "start": "Start",
+  "yourTurn": "Jouw beurt",
+  "wrongPunch": "Verkeerde stoot",
+  "tryAgain": "Probeer opnieuw",
+  "completed": "Je hebt alle 10 stoten voltooid!",
+  "playAgain": "Opnieuw spelen"
+}
+
+}

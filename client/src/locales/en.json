@@ -1,0 +1,45 @@
+{
+  "welcome": "WELCOME",
+  "toSparx": "to SPARX",
+  "selectLanguage": "Select Language",
+  "selectAge": "Select Age",
+  "chooseLanguage": "Choose Language",
+  "chooseAge": "Choose Age",
+  "confirm": "Confirm",
+  "tutorial": "Tutorial",
+  "skip": "Skip",
+  "home": {
+    "menu": "Menu",
+    "freeFight": "Free Fight",
+    "miniGames": "Mini-games",
+    "tutorial": "Tutorial",
+    "userProfile": "User Profile",
+    "settings": "Settings"
+  },
+  "score": {
+    "results": "Fight Results",
+    "timeChosen": "Time chosen",
+    "seconds": "seconds",
+    "punchesPerMinute": "Punches per minute",
+    "punchesByType": "Punches by type",
+    "backToFight": "Back to Fight"
+  },
+  "fight": {
+    "roundTime": "Round time",
+    "minutes": "minutes",
+    "start": "Start",
+    "pause": "Pause",
+    "hide": "Hide",
+    "switch": "Switch",
+    "stop": "Stop"
+  },
+  "minigames": {
+    "memorizeTitle": "Memorize the combination",
+    "start": "Start",
+    "yourTurn": "Your turn",
+    "wrongPunch": "Wrong Punch",
+    "tryAgain": "Try Again",
+    "completed": "You completed all 10 punches!",
+    "playAgain": "Play Again"
+  }
+}

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 function Welcome() {
+  const { t, i18n } = useTranslation();
   const [stage, setStage] = useState(1);
   const containerRef = useRef(null);
 
@@ -22,11 +24,12 @@ function Welcome() {
       return;
     }
 
+    i18n.changeLanguage(language); // Change app language
     setStage(3);
   };
 
   const handleTutorial = () => {
-    alert("Starting tutorial...");
+    alert(t("tutorial")); // Example: use translation for alert
   };
 
   const handleSkip = () => {
@@ -40,8 +43,8 @@ function Welcome() {
         {/* Stage 1 */}
         {stage === 1 && (
           <div className="welcome-stage">
-            <h1 className="welcome-title">WELCOME</h1>
-            <h2 className="sparx-subtitle">to SPARX</h2>
+            <h1 className="welcome-title">{t("welcome")}</h1>
+            <h2 className="sparx-subtitle">{t("toSparx")}</h2>
           </div>
         )}
 
@@ -50,20 +53,19 @@ function Welcome() {
           <div className="selection-stage show">
             <div className="selection-row">
               <div className="selection-group">
-                <label className="selection-label">Select Language</label>
-                <select id="languageSelect" onChange={() => {}}>
-                  <option value="">Choose Language</option>
+                <label className="selection-label">{t("selectLanguage")}</label>
+                <select id="languageSelect" defaultValue="">
+                  <option value="">{t("chooseLanguage")}</option>
                   <option value="en">English</option>
                   <option value="es">Español</option>
                   <option value="fr">Français</option>
-                  <option value="de">Deutsch</option>
-                  <option value="it">Italiano</option>
+                  <option value="nl">Nederlands</option>
                 </select>
               </div>
               <div className="selection-group">
-                <label className="selection-label">Select Age</label>
-                <select id="ageSelect" onChange={() => {}}>
-                  <option value="">Choose Age</option>
+                <label className="selection-label">{t("selectAge")}</label>
+                <select id="ageSelect" defaultValue="">
+                  <option value="">{t("chooseAge")}</option>
                   <option value="13-17">13-17</option>
                   <option value="18-25">18-25</option>
                   <option value="26-35">26-35</option>
@@ -73,7 +75,7 @@ function Welcome() {
               </div>
             </div>
             <button id="confirmBtn" className="confirm-btn" onClick={handleConfirm}>
-              Confirm
+              {t("confirm")}
             </button>
           </div>
         )}
@@ -83,10 +85,10 @@ function Welcome() {
           <div className="tutorial-stage show">
             <div className="tutorial-buttons">
               <button className="tutorial-btn" onClick={handleTutorial}>
-                Tutorial
+                {t("tutorial")}
               </button>
               <button className="tutorial-btn" onClick={handleSkip}>
-                Skip
+                {t("skip")}
               </button>
             </div>
           </div>

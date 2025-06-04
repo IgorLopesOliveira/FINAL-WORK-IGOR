@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../context/SocketContext";
+import { useTranslation } from "react-i18next";
 
 function Fight() {
   const socket = useSocket();
@@ -10,32 +11,60 @@ function Fight() {
   const [punchCount, setPunchCount] = useState(0);
   const [hidePunches, setHidePunches] = useState(false);
   const [flipLayout, setFlipLayout] = useState(false);
+  const [punchesByType, setPunchesByType] = useState({});
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+
   const resetFight = () => {
     setFightState("config");
     setTimeLeft(0);
     setPunchCount(0);
+    setPunchesByType({});
     setHidePunches(false);
     setFlipLayout(false);
   };
-  const navigate = useNavigate();
 
-
-
+  // Listen for punches and count by type
   useEffect(() => {
     if (!socket) return;
-    socket.on("punch", () => {
+    const punchHandler = (data) => {
       setPunchCount((c) => c + 1);
-    });
-    return () => socket.off("punch");
+      if (data && data.type) {
+        setPunchesByType((prev) => ({
+          ...prev,
+          [data.type]: (prev[data.type] || 0) + 1,
+        }));
+      }
+    };
+    socket.on("punch", punchHandler);
+    return () => socket.off("punch", punchHandler);
   }, [socket]);
 
+  // Timer countdown for fighting phase
   useEffect(() => {
     if (fightState !== "fighting" || timeLeft <= 0) return;
     const interval = setInterval(() => setTimeLeft((t) => t - 1), 1000);
     return () => clearInterval(interval);
   }, [fightState, timeLeft]);
 
+  // When fight ends, navigate to score page with stats
+  useEffect(() => {
+    if (fightState === "fighting" && timeLeft === 0) {
+      const totalSeconds = roundTime * 60;
+      const punchesPerMinute = totalSeconds > 0 ? Math.round((punchCount / totalSeconds) * 60) : 0;
+      navigate("/score", {
+        state: {
+          timeChosen: totalSeconds,
+          punchesPerMinute,
+          punchesByType,
+        },
+      });
+    }
+  }, [fightState, timeLeft, roundTime, punchCount, punchesByType, navigate]);
+
   const startCountdown = () => {
+    setPunchesByType({});
+    setPunchCount(0);
     setFightState("countdown");
     setTimeLeft(10);
     const countdown = setInterval(() => {
@@ -57,20 +86,19 @@ function Fight() {
   };
 
   const renderConfig = () => (
-  <div className="centered">
-    <div style={{ position: "absolute", top: 20, right: 20 }}>
-      <button onClick={() => navigate("/home")}>↩</button>
+    <div className="centered">
+      <div style={{ position: "absolute", top: 20, right: 20 }}>
+        <button onClick={() => navigate("/home")}>↩</button>
+      </div>
+      <h1>{t("fight.roundTime")}</h1>
+      <div className="time-selector">
+        <button onClick={() => setRoundTime((t) => Math.max(1, t - 1))}>-</button>
+        <span>{roundTime} {t("fight.minutes")}</span>
+        <button onClick={() => setRoundTime((t) => Math.min(10, t + 1))}>+</button>
+      </div>
+      <button onClick={startCountdown}>{t("fight.start")}</button>
     </div>
-    <h1>Round time</h1>
-    <div className="time-selector">
-      <button onClick={() => setRoundTime((t) => Math.max(1, t - 1))}>-</button>
-      <span>{roundTime} minutes</span>
-      <button onClick={() => setRoundTime((t) => Math.min(10, t + 1))}>+</button>
-    </div>
-    <button onClick={startCountdown}>Start</button>
-  </div>
-);
-
+  );
 
   const renderCountdown = () => (
     <div className="centered">
@@ -84,26 +112,24 @@ function Fight() {
       <div className="centered" style={{ fontSize: "4rem", gap: "1.5rem" }}>
         <div style={{ order: flipLayout ? 2 : 1 }}>{formatTime(timeLeft)}</div>
         {!hidePunches && <div style={{ order: flipLayout ? 1 : 2 }}>{punchCount}</div>}
-        <button onClick={() => setFightState("paused")}>Pause</button>
+        <button onClick={() => setFightState("paused")}>{t("fight.pause")}</button>
       </div>
       <div className="bottom-bar" />
     </div>
   );
-
 
   const renderPaused = () => (
     <div className="centered" style={{ fontSize: "3rem", gap: "1.5rem" }}>
       <div style={{ order: flipLayout ? 2 : 1 }}>{formatTime(timeLeft)}</div>
       {!hidePunches && <div style={{ order: flipLayout ? 1 : 2 }}>{punchCount}</div>}
       <div className="button-group">
-        <button onClick={() => setHidePunches((v) => !v)}>Hide</button>
+        <button onClick={() => setHidePunches((v) => !v)}>{t("fight.hide")}</button>
         <button onClick={() => setFightState("fighting")}>▶</button>
-        <button onClick={() => setFlipLayout((v) => !v)}>Switch</button>
-        <button onClick={resetFight}>Stop</button>
+        <button onClick={() => setFlipLayout((v) => !v)}>{t("fight.switch")}</button>
+        <button onClick={resetFight}>{t("fight.stop")}</button>
       </div>
     </div>
   );
-
 
   if (fightState === "config") return renderConfig();
   if (fightState === "countdown") return renderCountdown();

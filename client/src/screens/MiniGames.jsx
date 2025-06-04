@@ -1,12 +1,14 @@
 import { useSocket } from "../context/SocketContext";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 const punches = ["Jab", "Left hook", "Uppercut"];
 
 function Memorize() {
   const socket = useSocket();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [phase, setPhase] = useState("menu"); // menu, show, wait, input, fail, win
   const [combo, setCombo] = useState([]);
@@ -142,21 +144,21 @@ function Memorize() {
   // Render functions for each phase
   const renderMenu = () => (
     <div className="centered">
-      <h1>Memorize the combination</h1>
-      <button onClick={startGame}>Start</button>
+      <h1>{t("minigames.memorizeTitle")}</h1>
+      <button onClick={startGame}>{t("minigames.start")}</button>
     </div>
   );
 
   const renderShow = () => (
     <div className="focus-mode centered">
-      <h2 style={{ marginBottom: "1rem" }}>Memorize the combination</h2>
+      <h2 style={{ marginBottom: "1rem" }}>{t("minigames.memorizeTitle")}</h2>
       <div className="big-text">{currentDisplay}</div>
     </div>
   );
 
   const renderWait = () => (
     <div className="centered">
-      <h2>Your turn</h2>
+      <h2>{t("minigames.yourTurn")}</h2>
       <div className="big-text">{countdown > 0 ? countdown : ""}</div>
     </div>
   );
@@ -174,15 +176,15 @@ function Memorize() {
 
   const renderFail = () => (
     <div className="centered">
-      <h2 style={{ color: "#B44" }}>Wrong Punch</h2>
-      <button onClick={resetGame}>Try Again</button>
+      <h2 style={{ color: "#B44" }}>{t("minigames.wrongPunch")}</h2>
+      <button onClick={resetGame}>{t("minigames.tryAgain")}</button>
     </div>
   );
 
   const renderWin = () => (
     <div className="centered">
-      <h1>You completed all 10 punches!</h1>
-      <button onClick={resetGame}>Play Again</button>
+      <h1>{t("minigames.completed")}</h1>
+      <button onClick={resetGame}>{t("minigames.playAgain")}</button>
     </div>
   );
 
