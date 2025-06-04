@@ -143,11 +143,18 @@ function Memorize() {
 
   // Render functions for each phase
   const renderMenu = () => (
-    <div className="centered">
-      <h1>{t("minigames.memorizeTitle")}</h1>
-      <button onClick={startGame}>{t("minigames.start")}</button>
-    </div>
-  );
+  <div className="centered">
+    <button
+      className="back-button"
+      style={{ position: "absolute", top: 20, right: 20 }}
+      onClick={() => navigate("/minimenu")}
+    >
+      ↩
+    </button>
+    <h1>{t("minigames.memorizeTitle")}</h1>
+    <button onClick={startGame}>{t("minigames.start")}</button>
+  </div>
+);
 
   const renderShow = () => (
     <div className="focus-mode centered">
@@ -198,7 +205,7 @@ function Memorize() {
 
   return (
     <div className="memorize-container">
-      <button className="back-button" onClick={() => navigate("/minigames")}>↩</button>
+      <button className="back-button" onClick={() => navigate("/minimenu")}>↩</button>
       {phase === "menu" && renderMenu()}
       {phase === "show" && renderShow()}
       {phase === "wait" && renderWait()}

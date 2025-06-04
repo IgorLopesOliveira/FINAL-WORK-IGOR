@@ -22,7 +22,7 @@ export default function Home() {
         <button style={styles.button} onClick={() => navigate('/fight')}>
           {t("home.freeFight")}
         </button>
-        <button style={styles.button} onClick={() => alert(t("home.miniGames"))}>
+        <button style={styles.button} onClick={() => navigate('/minimenu')}>
           {t("home.miniGames")}
         </button>
         <button style={styles.button} onClick={() => alert(t("home.tutorial"))}>
