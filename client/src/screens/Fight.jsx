@@ -3,6 +3,91 @@ import { useNavigate } from "react-router-dom";
 import { useSocket } from "../context/SocketContext";
 import { useTranslation } from "react-i18next";
 
+const styles = {
+  container: {
+    width: '100vw',
+    height: '100vh',
+    maxWidth: '852px',
+    maxHeight: '393px',
+    background: '#EFEFEF',
+    color: '#2C2C2C',
+    fontFamily: "'Neue Montreal', sans-serif",
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '20px',
+    boxSizing: 'border-box',
+    margin: '0 auto',
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '20px',
+    width: '100%',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    fontSize: '2rem',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    color: '#2C2C2C',
+    transition: 'transform 0.2s ease',
+  },
+  title: {
+    fontSize: '2rem',
+    fontWeight: '900',
+    marginBottom: '20px',
+  },
+  timeSelector: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    marginBottom: '20px',
+  },
+  button: {
+    padding: '20px 30px',
+    borderRadius: '50px',
+    border: '2px solid #2C2C2C',
+    background: '#EFEFEF',
+    color: '#2C2C2C',
+    fontSize: '1.2rem',
+    fontWeight: '700',
+    cursor: 'pointer',
+    minWidth: '140px',
+    transition: 'all 0.2s ease',
+    margin: '10px',
+  },
+  fighting: {
+    fontSize: '4rem',
+    fontWeight: '900',
+    display: 'flex',
+    gap: '2rem',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  paused: {
+    fontSize: '3rem',
+    fontWeight: '900',
+    display: 'flex',
+    gap: '2rem',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  buttonGroup: {
+    display: 'flex',
+    gap: '20px',
+    marginTop: '20px',
+  },
+};
+
 function Fight() {
   const socket = useSocket();
   const [fightState, setFightState] = useState("config"); // config, countdown, fighting, paused
@@ -86,47 +171,67 @@ function Fight() {
   };
 
   const renderConfig = () => (
-    <div className="centered">
-      <div style={{ position: "absolute", top: 20, right: 20 }}>
-        <button onClick={() => navigate("/home")}>↩</button>
+    <div style={styles.container}>
+      <button style={styles.backButton} onClick={() => navigate("/home")}>↩</button>
+      <div style={styles.header}>
+        <div />
+        <h1 style={styles.title}>{t("fight.roundTime")}</h1>
+        <div />
       </div>
-      <h1>{t("fight.roundTime")}</h1>
-      <div className="time-selector">
-        <button onClick={() => setRoundTime((t) => Math.max(1, t - 1))}>-</button>
-        <span>{roundTime} {t("fight.minutes")}</span>
-        <button onClick={() => setRoundTime((t) => Math.min(10, t + 1))}>+</button>
+      <div style={styles.timeSelector}>
+        <button style={styles.button} onClick={() => setRoundTime((t) => Math.max(1, t - 1))}>-</button>
+        <span style={{ fontSize: '1.5rem', fontWeight: '700' }}>{roundTime} {t("fight.minutes")}</span>
+        <button style={styles.button} onClick={() => setRoundTime((t) => Math.min(10, t + 1))}>+</button>
       </div>
-      <button onClick={startCountdown}>{t("fight.start")}</button>
+      <button style={styles.button} onClick={startCountdown}>{t("fight.start")}</button>
     </div>
   );
 
   const renderCountdown = () => (
-    <div className="centered">
-      <h1>{timeLeft}</h1>
+    <div style={styles.container}>
+      <h1 style={{ fontSize: '6rem', fontWeight: '900' }}>{timeLeft}</h1>
     </div>
   );
 
   const renderFighting = () => (
-    <div className={fightState === "fighting" ? "focus-mode" : ""}>
-      <div className="top-bar" />
-      <div className="centered" style={{ fontSize: "4rem", gap: "1.5rem" }}>
-        <div style={{ order: flipLayout ? 2 : 1 }}>{formatTime(timeLeft)}</div>
-        {!hidePunches && <div style={{ order: flipLayout ? 1 : 2 }}>{punchCount}</div>}
-        <button onClick={() => setFightState("paused")}>{t("fight.pause")}</button>
+  <div style={styles.container}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
+        height: '100%',
+        gap: '2rem',
+      }}
+    >
+      <div style={{ fontSize: '4rem', fontWeight: 900, order: flipLayout ? 2 : 1 }}>
+        {formatTime(timeLeft)}
       </div>
-      <div className="bottom-bar" />
+      {!hidePunches && (
+        <div style={{ fontSize: '4rem', fontWeight: 900, order: flipLayout ? 1 : 2 }}>
+          {punchCount}
+        </div>
+      )}
+      <button style={styles.button} onClick={() => setFightState("paused")}>
+        {t("fight.pause")}
+      </button>
     </div>
+  </div>
   );
 
   const renderPaused = () => (
-    <div className="centered" style={{ fontSize: "3rem", gap: "1.5rem" }}>
-      <div style={{ order: flipLayout ? 2 : 1 }}>{formatTime(timeLeft)}</div>
-      {!hidePunches && <div style={{ order: flipLayout ? 1 : 2 }}>{punchCount}</div>}
-      <div className="button-group">
-        <button onClick={() => setHidePunches((v) => !v)}>{t("fight.hide")}</button>
-        <button onClick={() => setFightState("fighting")}>▶</button>
-        <button onClick={() => setFlipLayout((v) => !v)}>{t("fight.switch")}</button>
-        <button onClick={resetFight}>{t("fight.stop")}</button>
+    <div style={styles.container}>
+      <div style={styles.paused}>
+        <div style={{ order: flipLayout ? 2 : 1 }}>{formatTime(timeLeft)}</div>
+        {!hidePunches && <div style={{ order: flipLayout ? 1 : 2 }}>{punchCount}</div>}
+      </div>
+      <div style={styles.buttonGroup}>
+        <button style={styles.button} onClick={() => setHidePunches((v) => !v)}>{t("fight.hide")}</button>
+        <button style={styles.button} onClick={() => setFightState("fighting")}>▶</button>
+        <button style={styles.button} onClick={() => setFlipLayout((v) => !v)}>{t("fight.switch")}</button>
+        <button style={styles.button} onClick={resetFight}>{t("fight.stop")}</button>
       </div>
     </div>
   );

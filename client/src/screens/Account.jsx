@@ -2,6 +2,83 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+const styles = {
+  container: {
+    width: '100vw',
+    height: '100vh',
+    maxWidth: '852px',
+    maxHeight: '393px',
+    background: '#EFEFEF',
+    color: '#2C2C2C',
+    fontFamily: "'Neue Montreal', sans-serif",
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '20px',
+    boxSizing: 'border-box',
+    margin: '0 auto',
+  },
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '20px',
+  },
+  icon: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+    backgroundColor: '#2C2C2C',
+    color: '#EFEFEF',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '20px',
+    cursor: 'pointer',
+  },
+  iconSymbol: {
+    fontSize: '20px',
+    lineHeight: '1',
+  },
+  title: {
+    fontSize: '2rem',
+    fontWeight: '900',
+  },
+  scoreList: {
+    flex: 1,
+    overflowY: 'auto',
+    padding: 0,
+    margin: 0,
+    listStyle: 'none',
+  },
+  scoreItem: {
+    background: '#fff',
+    borderRadius: '10px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.07)',
+    marginBottom: '1.5rem',
+    padding: '1.5rem',
+    textAlign: 'left',
+  },
+  punchesList: {
+    margin: '0.5rem 0 0 1rem',
+    padding: 0,
+    listStyle: 'none',
+  },
+  punchesItem: {
+    fontSize: '1.1rem',
+  },
+  backButton: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    fontSize: '2rem',
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    color: '#2C2C2C',
+    transition: 'transform 0.2s ease',
+  },
+};
+
 export default function Account() {
   const [scores, setScores] = useState([]);
   const navigate = useNavigate();
@@ -9,19 +86,23 @@ export default function Account() {
 
   useEffect(() => {
     const storedScores = JSON.parse(localStorage.getItem("fightScores") || "[]");
-    setScores(storedScores.reverse()); // Show latest first
+    setScores(storedScores.reverse());
   }, []);
 
   return (
-    <div className="account-container">
-      <button className="back-button" onClick={() => navigate("/home")}>↩</button>
-      <h1>{t("account.title", "Your Fight Scores")}</h1>
+    <div style={styles.container}>
+      <button style={styles.backButton} onClick={() => navigate("/home")}>↩</button>
+      <div style={styles.header}>
+        <div />
+        <h1 style={styles.title}>{t("account.title", "Your Fight Scores")}</h1>
+        <div />
+      </div>
       {scores.length === 0 ? (
         <div>{t("account.noScores", "No scores yet.")}</div>
       ) : (
-        <ul className="score-list">
+        <ul style={styles.scoreList}>
           {scores.map((score, idx) => (
-            <li key={idx} className="score-item">
+            <li key={idx} style={styles.scoreItem}>
               <div>
                 <strong>{t("score.timeChosen")}:</strong> {score.timeChosen} {t("score.seconds")}
               </div>
@@ -30,10 +111,10 @@ export default function Account() {
               </div>
               <div>
                 <strong>{t("score.punchesByType")}:</strong>
-                <ul>
+                <ul style={styles.punchesList}>
                   {score.punchesByType &&
                     Object.entries(score.punchesByType).map(([type, count]) => (
-                      <li key={type}>
+                      <li key={type} style={styles.punchesItem}>
                         {type}: {count}
                       </li>
                     ))}
@@ -47,56 +128,6 @@ export default function Account() {
           ))}
         </ul>
       )}
-      <style>{`
-        .account-container {
-          min-height: 100vh;
-          background: #EFEFEF;
-          font-family: 'Inter', sans-serif;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: flex-start;
-          text-align: center;
-          position: relative;
-          padding-top: 60px;
-        }
-        h1 {
-          font-size: 2.5rem;
-          margin-bottom: 2rem;
-        }
-        .score-list {
-          width: 100%;
-          max-width: 600px;
-          list-style: none;
-          padding: 0;
-        }
-        .score-item {
-          background: #fff;
-          border-radius: 10px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-          margin-bottom: 1.5rem;
-          padding: 1.5rem;
-          text-align: left;
-        }
-        .score-item ul {
-          margin: 0.5rem 0 0 1rem;
-          padding: 0;
-        }
-        .score-item li {
-          font-size: 1.1rem;
-        }
-        .back-button {
-          position: absolute;
-          top: 20px;
-          right: 20px;
-          font-size: 2rem;
-          background: none;
-          border: none;
-          cursor: pointer;
-          color: #2C2C2C;
-          transition: transform 0.2s ease;
-        }
-      `}</style>
     </div>
   );
 }
