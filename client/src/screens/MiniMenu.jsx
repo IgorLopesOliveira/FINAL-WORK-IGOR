@@ -8,13 +8,13 @@ export default function MiniMenu() {
   return (
     <div className="mini-menu-container">
       <button className="back-button" onClick={() => navigate("/home")}>↩</button>
-      <h1>{t("minigames.menuTitle", "Mini-Games")}</h1>
+      <h1>{t("minimenu.menuTitle", "Mini-Games")}</h1>
       <div className="mini-menu-buttons">
         <button className="mini-btn" onClick={() => navigate("/memorize")}>
-          {t("minigames.memorize", "Memorize")}
+          {t("minimenu.memorize", "Memorize")}
         </button>
-        <button className="mini-btn" onClick={() => navigate("/minigames/accuracy")}>
-          {t("minigames.accuracy", "Accuracy")}
+        <button className="mini-btn" onClick={() => navigate("/accuracy")}>
+          {t("minimenu.accuracy", "Accuracy")}
         </button>
       </div>
       <style>{`

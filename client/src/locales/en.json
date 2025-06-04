@@ -33,7 +33,7 @@
     "switch": "Switch",
     "stop": "Stop"
   },
-  "minigames": {
+  "minimenu": {
     "memorizeTitle": "Memorize the combination",
     "start": "Start",
     "yourTurn": "Your turn",
@@ -41,5 +41,34 @@
     "tryAgain": "Try Again",
     "completed": "You completed all 10 punches!",
     "playAgain": "Play Again"
+  },
+  "account": {
+    "title": "Your Fight Scores",
+    "noScores": "No scores yet.",
+    "date": "Date"
+  },
+  "accuracy": {
+    "title": "Accuracy Game",
+    "start": "Start",
+    "hit": "Hit this punch!",
+    "wrongPunch": "Wrong Punch",
+    "backToMenu": "Back to Accuracy Menu",
+    "completed": "You completed all 10 punches!",
+    "playAgain": "Play Again",
+    "timeLeft": "Time left"
+  },
+  "minigames": {
+    "menuTitle": "Mini-Games",
+    "memorize": "Memorize",
+    "accuracy": "Accuracy"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode",
+    "reset": "Reset Progress",
+    "confirmReset": "Are you sure you want to reset your progress?"
   }
 }

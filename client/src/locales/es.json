@@ -27,20 +27,48 @@
   "fight": {
     "roundTime": "Tiempo de ronda",
     "minutes": "minutos",
-    "start": "Iniciar",
+    "start": "Comenzar",
     "pause": "Pausar",
     "hide": "Ocultar",
     "switch": "Cambiar",
     "stop": "Detener"
   },
+  "minimenu": {
+    "memorizeTitle": "Memoriza la combinación",
+    "start": "Comenzar",
+    "yourTurn": "Tu turno",
+    "wrongPunch": "Golpe incorrecto",
+    "tryAgain": "Intenta de nuevo",
+    "completed": "¡Has completado los 10 golpes!",
+    "playAgain": "Jugar de nuevo"
+  },
+  "account": {
+    "title": "Tus puntuaciones de pelea",
+    "noScores": "Aún no hay puntuaciones.",
+    "date": "Fecha"
+  },
+  "accuracy": {
+    "title": "Juego de Precisión",
+    "start": "Comenzar",
+    "hit": "¡Da este golpe!",
+    "wrongPunch": "Golpe incorrecto",
+    "backToMenu": "Volver al menú de precisión",
+    "completed": "¡Has completado los 10 golpes!",
+    "playAgain": "Jugar de nuevo",
+    "timeLeft": "Tiempo restante"
+  },
   "minigames": {
-  "memorizeTitle": "Memoriza la combinación",
-  "start": "Comenzar",
-  "yourTurn": "Tu turno",
-  "wrongPunch": "Golpe incorrecto",
-  "tryAgain": "Intenta de nuevo",
-  "completed": "¡Has completado los 10 golpes!",
-  "playAgain": "Jugar de nuevo"
-}
-
+    "menuTitle": "Minijuegos",
+    "memorize": "Memoriza",
+    "accuracy": "Precisión"
+  },
+  "settings": {
+    "title": "Configuración",
+    "language": "Idioma",
+    "theme": "Tema",
+    "darkMode": "Modo oscuro",
+    "lightMode": "Modo claro",
+    "reset": "Reiniciar progreso",
+    "confirmReset": "¿Estás seguro de que deseas reiniciar tu progreso?"
+  }
 }

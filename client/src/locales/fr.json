@@ -33,14 +33,42 @@
     "switch": "Changer",
     "stop": "Arrêter"
   },
+  "minimenu": {
+    "memorizeTitle": "Mémorise la combinaison",
+    "start": "Démarrer",
+    "yourTurn": "À ton tour",
+    "wrongPunch": "Mauvais coup",
+    "tryAgain": "Réessayer",
+    "completed": "Tu as complété les 10 coups !",
+    "playAgain": "Rejouer"
+  },
+  "account": {
+    "title": "Tes scores de combat",
+    "noScores": "Aucun score pour le moment.",
+    "date": "Date"
+  },
+  "accuracy": {
+    "title": "Jeu de Précision",
+    "start": "Démarrer",
+    "hit": "Frappe ce coup !",
+    "wrongPunch": "Mauvais coup",
+    "backToMenu": "Retour au menu Précision",
+    "completed": "Tu as complété les 10 coups !",
+    "playAgain": "Rejouer",
+    "timeLeft": "Temps restant"
+  },
   "minigames": {
-  "memorizeTitle": "Mémorise la combinaison",
-  "start": "Démarrer",
-  "yourTurn": "À ton tour",
-  "wrongPunch": "Mauvais coup",
-  "tryAgain": "Réessayer",
-  "completed": "Tu as complété les 10 coups !",
-  "playAgain": "Rejouer"
-}
-
+    "menuTitle": "Mini-jeux",
+    "memorize": "Mémoriser",
+    "accuracy": "Précision"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "language": "Langue",
+    "theme": "Thème",
+    "darkMode": "Mode sombre",
+    "lightMode": "Mode clair",
+    "reset": "Réinitialiser la progression",
+    "confirmReset": "Es-tu sûr de vouloir réinitialiser ta progression ?"
+  }
 }

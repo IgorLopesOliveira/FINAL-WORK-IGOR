@@ -1,5 +1,13 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
+
+// Save score to localStorage as an array of scores
+function saveScoreToLocalStorage(score) {
+  const scores = JSON.parse(localStorage.getItem("fightScores") || "[]");
+  scores.push(score);
+  localStorage.setItem("fightScores", JSON.stringify(scores));
+}
 
 function Score() {
   const location = useLocation();
@@ -11,6 +19,18 @@ function Score() {
     punchesPerMinute: 0,
     punchesByType: {},
   };
+
+  useEffect(() => {
+    if (timeChosen && punchesPerMinute) {
+      saveScoreToLocalStorage({
+        timeChosen,
+        punchesPerMinute,
+        punchesByType,
+        date: new Date().toISOString()
+      });
+    }
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <div className="score-container">

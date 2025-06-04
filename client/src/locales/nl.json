@@ -10,14 +10,14 @@
   "skip": "Overslaan",
   "home": {
     "menu": "Menu",
-    "freeFight": "Vrije gevecht",
+    "freeFight": "Vrij gevecht",
     "miniGames": "Minigames",
     "tutorial": "Tutorial",
     "userProfile": "Gebruikersprofiel",
     "settings": "Instellingen"
   },
   "score": {
-    "results": "Gevechtsresultaten",
+    "results": "Resultaten van het gevecht",
     "timeChosen": "Gekozen tijd",
     "seconds": "seconden",
     "punchesPerMinute": "Stoten per minuut",
@@ -33,14 +33,42 @@
     "switch": "Wisselen",
     "stop": "Stoppen"
   },
+  "minimenu": {
+    "memorizeTitle": "Onthoud de combinatie",
+    "start": "Start",
+    "yourTurn": "Jouw beurt",
+    "wrongPunch": "Verkeerde stoot",
+    "tryAgain": "Probeer opnieuw",
+    "completed": "Je hebt alle 10 stoten voltooid!",
+    "playAgain": "Opnieuw spelen"
+  },
+  "account": {
+    "title": "Jouw gevechtsscores",
+    "noScores": "Nog geen scores.",
+    "date": "Datum"
+  },
+  "accuracy": {
+    "title": "Nauwkeurigheidsspel",
+    "start": "Start",
+    "hit": "Raak deze stoot!",
+    "wrongPunch": "Verkeerde stoot",
+    "backToMenu": "Terug naar nauwkeurigheidsmenu",
+    "completed": "Je hebt alle 10 stoten voltooid!",
+    "playAgain": "Opnieuw spelen",
+    "timeLeft": "Resterende tijd"
+  },
   "minigames": {
-  "memorizeTitle": "Onthoud de combinatie",
-  "start": "Start",
-  "yourTurn": "Jouw beurt",
-  "wrongPunch": "Verkeerde stoot",
-  "tryAgain": "Probeer opnieuw",
-  "completed": "Je hebt alle 10 stoten voltooid!",
-  "playAgain": "Opnieuw spelen"
-}
-
+    "menuTitle": "Minigames",
+    "memorize": "Onthouden",
+    "accuracy": "Nauwkeurigheid"
+  },
+  "settings": {
+    "title": "Instellingen",
+    "language": "Taal",
+    "theme": "Thema",
+    "darkMode": "Donkere modus",
+    "lightMode": "Lichte modus",
+    "reset": "Voortgang resetten",
+    "confirmReset": "Weet je zeker dat je je voortgang wilt resetten?"
+  }
 }

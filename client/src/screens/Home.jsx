@@ -9,11 +9,11 @@ export default function Home() {
   return (
     <div style={styles.container}>
       <div style={styles.header}>
-        <div style={styles.icon} onClick={() => alert(t("home.userProfile"))}>
+        <div style={styles.icon} onClick={() => navigate('/account')}>
           <span style={styles.iconSymbol}>👤</span>
         </div>
         <h1 style={styles.title}>{t("home.menu")}</h1>
-        <div style={styles.icon} onClick={() => alert(t("home.settings"))}>
+        <div style={styles.icon} onClick={() => navigate('/settings')}>
           <span style={styles.iconSymbol}>⚙️</span>
         </div>
       </div>

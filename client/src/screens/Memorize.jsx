@@ -159,20 +159,20 @@ function Memorize() {
   const renderShow = () => (
     <div className="focus-mode centered">
       <h2 style={{ marginBottom: "1rem" }}>{t("minigames.memorizeTitle")}</h2>
-      <div className="big-text">{currentDisplay}</div>
+      <div style={{ fontSize: "5rem", fontWeight: 900, marginBottom: "4rem" }} className="big-text">{currentDisplay}</div>
     </div>
   );
 
   const renderWait = () => (
     <div className="centered">
       <h2>{t("minigames.yourTurn")}</h2>
-      <div className="big-text">{countdown > 0 ? countdown : ""}</div>
+      <div style={{ fontSize: "5rem", fontWeight: 900 }}className="big-text">{countdown > 0 ? countdown : ""}</div>
     </div>
   );
 
   const renderInput = () => (
     <div className="focus-mode centered">
-      <div className="big-text">
+      <div style={{ fontSize: "5rem", fontWeight: 900, marginBottom: "4rem" }} className="big-text">
         {feedback}
       </div>
       <div style={{ fontSize: "1.5rem", marginTop: "1rem" }}>
