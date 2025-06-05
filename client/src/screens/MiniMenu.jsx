@@ -46,7 +46,6 @@ export default function MiniMenu() {
           border: none;
           border-radius: 12px;
           cursor: pointer;
-          transition: background 0.2s;
         }
         .mini-btn:hover {
           background: #444;
@@ -59,8 +58,6 @@ export default function MiniMenu() {
           background: none;
           border: none;
           cursor: pointer;
-          color: #2C2C2C;
-          transition: transform 0.2s ease;
         }
       `}</style>
     </div>

@@ -7,6 +7,88 @@ const punches = ["Jab", "Left hook", "Uppercut"];
 const INITIAL_TIME = 2000; // ms
 const TIME_DECREMENT = 200; // ms
 
+const styles = {
+  container: {
+    width: '100vw',
+    height: '100vh',
+    maxWidth: '852px',
+    maxHeight: '393px',
+    background: '#EFEFEF',
+    color: '#2C2C2C',
+    fontFamily: "'Inter', sans-serif",
+    display: 'flex',
+    flexDirection: 'column',
+    padding: '20px',
+    boxSizing: 'border-box',
+    margin: '0 auto',
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '20px',
+    width: '100%',
+  },
+  icon: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
+    backgroundColor: '#2C2C2C',
+    color: '#EFEFEF',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '20px',
+    cursor: 'pointer',
+  },
+  iconSymbol: {
+    fontSize: '20px',
+    lineHeight: '1',
+  },
+  title: {
+    fontSize: '2rem',
+    fontWeight: '900',
+    marginBottom: '2rem',
+  },
+  button: {
+    padding: '20px 30px',
+    borderRadius: '50px',
+    border: '2px solid #2C2C2C',
+    background: '#EFEFEF',
+    color: '#2C2C2C',
+    fontSize: '1.2rem',
+    fontWeight: '700',
+    cursor: 'pointer',
+    minWidth: '140px',
+    transition: 'all 0.2s ease',
+    margin: '10px',
+  },
+  bigText: {
+    fontSize: '4rem',
+    fontWeight: 900,
+    marginBottom: '2rem',
+  },
+  progress: {
+    fontSize: '1.5rem',
+    marginTop: '1rem',
+  },
+  fail: {
+    color: "#B44",
+  },
+  centered: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    textAlign: 'center',
+    padding: '0 1rem',
+  },
+};
+
 function Accuracy() {
   const socket = useSocket();
   const navigate = useNavigate();
@@ -86,24 +168,26 @@ function Accuracy() {
 
   // Render functions
   const renderMenu = () => (
-    <div className="centered">
-      <button
-        className="back-button"
-        style={{ position: "absolute", top: 20, right: 20 }}
-        onClick={() => navigate("/minimenu")}
-      >
-        ↩
-      </button>
-      <h1>{t("accuracy.title", "Accuracy Game")}</h1>
-      <button onClick={startGame}>{t("accuracy.start", "Start")}</button>
+    <div style={styles.centered}>
+      <div style={styles.header}>
+        <div />
+        <h1 style={styles.title}>{t("accuracy.title", "Accuracy Game")}</h1>
+        <div
+          style={styles.icon}
+          onClick={() => navigate("/minimenu")}
+        >
+          <span style={styles.iconSymbol}>↩</span>
+        </div>
+      </div>
+      <button style={styles.button} onClick={startGame}>{t("accuracy.start", "Start")}</button>
     </div>
   );
 
   const renderInput = () => (
-    <div className="centered">
-      <h2>{t("accuracy.hit", "Hit this punch!")}</h2>
-      <div  style={{ fontSize: "5rem", fontWeight: 900 }} className="big-text">{currentPunch}</div>
-      <div style={{ fontSize: "1.2rem", marginTop: "1rem" }}>
+    <div style={styles.centered}>
+      <h2 style={styles.title}>{t("accuracy.hit", "Hit this punch!")}</h2>
+      <div style={styles.bigText}>{currentPunch}</div>
+      <div style={styles.progress}>
         {currentIndex + 1}/10
       </div>
       <div style={{ marginTop: "1rem", fontSize: "1.2rem" }}>
@@ -113,33 +197,25 @@ function Accuracy() {
   );
 
   const renderFail = () => (
-    <div className="centered">
-      <h2 style={{ color: "#B44" }}>{t("accuracy.wrongPunch", "Wrong Punch")}</h2>
-      <button onClick={resetGame}>{t("accuracy.backToMenu", "Back to Accuracy Menu")}</button>
+    <div style={styles.centered}>
+      <h2 style={{ ...styles.title, ...styles.fail }}>{t("accuracy.wrongPunch", "Wrong Punch")}</h2>
+      <button style={styles.button} onClick={resetGame}>{t("accuracy.backToMenu", "Back to Accuracy Menu")}</button>
     </div>
   );
 
   const renderWin = () => (
-    <div className="centered">
-      <h1>{t("accuracy.completed", "You completed all 10 punches!")}</h1>
-      <button onClick={resetGame}>{t("accuracy.playAgain", "Play Again")}</button>
+    <div style={styles.centered}>
+      <h1 style={styles.title}>{t("accuracy.completed", "You completed all 10 punches!")}</h1>
+      <button style={styles.button} onClick={resetGame}>{t("accuracy.playAgain", "Play Again")}</button>
     </div>
   );
 
-  if (phase === "menu") return renderMenu();
-  if (phase === "input") return renderInput();
-  if (phase === "fail") return renderFail();
-  if (phase === "win") return renderWin();
+  if (phase === "menu") return <div style={styles.container}>{renderMenu()}</div>;
+  if (phase === "input") return <div style={styles.container}>{renderInput()}</div>;
+  if (phase === "fail") return <div style={styles.container}>{renderFail()}</div>;
+  if (phase === "win") return <div style={styles.container}>{renderWin()}</div>;
 
   return null;
 }
-<style>{`
-  .big-text {
-    font-size: 3rem;
-    font-weight: bold;
-    margin: 1rem 0;
-  }
-`}
-</style>
 
 export default Accuracy;

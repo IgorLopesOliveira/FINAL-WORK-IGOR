@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../context/SocketContext";
 import { useTranslation } from "react-i18next";
@@ -63,10 +63,24 @@ const styles = {
     transition: 'all 0.2s ease',
     margin: '10px',
   },
+  smallButton: {
+    padding: '8px 18px',
+    borderRadius: '50px',
+    border: '2px solid #2C2C2C',
+    background: '#EFEFEF',
+    color: '#2C2C2C',
+    fontSize: '1.2rem',
+    fontWeight: '700',
+    cursor: 'pointer',
+    minWidth: '40px',
+    transition: 'all 0.2s ease',
+    margin: '10px',
+  },
   fighting: {
     fontSize: '4rem',
     fontWeight: '900',
     display: 'flex',
+    flexDirection: 'column',
     gap: '2rem',
     alignItems: 'center',
     justifyContent: 'center',
@@ -76,6 +90,7 @@ const styles = {
     fontSize: '3rem',
     fontWeight: '900',
     display: 'flex',
+    flexDirection: 'column',
     gap: '2rem',
     alignItems: 'center',
     justifyContent: 'center',
@@ -91,6 +106,7 @@ const styles = {
 function Fight() {
   const socket = useSocket();
   const [fightState, setFightState] = useState("config"); // config, countdown, fighting, paused
+  const [prevFightState, setPrevFightState] = useState(null); // Track previous state
   const [roundTime, setRoundTime] = useState(3); // in minutes
   const [timeLeft, setTimeLeft] = useState(0);
   const [punchCount, setPunchCount] = useState(0);
@@ -99,6 +115,10 @@ function Fight() {
   const [punchesByType, setPunchesByType] = useState({});
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  // Sound refs
+  const tripleTapRef = useRef(null);
+  const tripleBellRef = useRef(null);
 
   const resetFight = () => {
     setFightState("config");
@@ -147,6 +167,28 @@ function Fight() {
     }
   }, [fightState, timeLeft, roundTime, punchCount, punchesByType, navigate]);
 
+  // Track previous fightState
+  useEffect(() => {
+    setPrevFightState(fightState);
+  }, [fightState]);
+
+  // Play sounds at correct moments
+  useEffect(() => {
+    if (fightState === "countdown" && tripleTapRef.current) {
+      tripleTapRef.current.currentTime = 0;
+      tripleTapRef.current.play();
+    }
+    // Only play bell if coming from countdown
+    if (
+      fightState === "fighting" &&
+      prevFightState === "countdown" &&
+      tripleBellRef.current
+    ) {
+      tripleBellRef.current.currentTime = 0;
+      tripleBellRef.current.play();
+    }
+  }, [fightState, prevFightState]);
+
   const startCountdown = () => {
     setPunchesByType({});
     setPunchCount(0);
@@ -170,6 +212,7 @@ function Fight() {
     return `${m.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`;
   };
 
+  // UI Renders
   const renderConfig = () => (
     <div style={styles.container}>
       <button style={styles.backButton} onClick={() => navigate("/home")}>↩</button>
@@ -179,9 +222,9 @@ function Fight() {
         <div />
       </div>
       <div style={styles.timeSelector}>
-        <button style={styles.button} onClick={() => setRoundTime((t) => Math.max(1, t - 1))}>-</button>
+        <button style={styles.smallButton} onClick={() => setRoundTime((t) => Math.max(1, t - 1))}>-</button>
         <span style={{ fontSize: '1.5rem', fontWeight: '700' }}>{roundTime} {t("fight.minutes")}</span>
-        <button style={styles.button} onClick={() => setRoundTime((t) => Math.min(10, t + 1))}>+</button>
+        <button style={styles.smallButton} onClick={() => setRoundTime((t) => Math.min(10, t + 1))}>+</button>
       </div>
       <button style={styles.button} onClick={startCountdown}>{t("fight.start")}</button>
     </div>
@@ -194,31 +237,13 @@ function Fight() {
   );
 
   const renderFighting = () => (
-  <div style={styles.container}>
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        height: '100%',
-        gap: '2rem',
-      }}
-    >
-      <div style={{ fontSize: '4rem', fontWeight: 900, order: flipLayout ? 2 : 1 }}>
-        {formatTime(timeLeft)}
+    <div style={styles.container}>
+      <div style={styles.fighting}>
+        <div style={{ order: flipLayout ? 2 : 1 }}>{formatTime(timeLeft)}</div>
+        {!hidePunches && <div style={{ order: flipLayout ? 1 : 2 }}>{punchCount}</div>}
+        <button style={styles.button} onClick={() => setFightState("paused")}>{t("fight.pause")}</button>
       </div>
-      {!hidePunches && (
-        <div style={{ fontSize: '4rem', fontWeight: 900, order: flipLayout ? 1 : 2 }}>
-          {punchCount}
-        </div>
-      )}
-      <button style={styles.button} onClick={() => setFightState("paused")}>
-        {t("fight.pause")}
-      </button>
     </div>
-  </div>
   );
 
   const renderPaused = () => (
@@ -236,10 +261,17 @@ function Fight() {
     </div>
   );
 
-  if (fightState === "config") return renderConfig();
-  if (fightState === "countdown") return renderCountdown();
-  if (fightState === "paused") return renderPaused();
-  return renderFighting();
+  return (
+    <>
+      {/* Audio elements for sounds */}
+      <audio ref={tripleTapRef} src="/sounds/triple-tap.mp3" preload="auto" />
+      <audio ref={tripleBellRef} src="/sounds/boxing-bell.mp3" preload="auto" />
+      {fightState === "config" && renderConfig()}
+      {fightState === "countdown" && renderCountdown()}
+      {fightState === "paused" && renderPaused()}
+      {fightState === "fighting" && renderFighting()}
+    </>
+  );
 }
 
 export default Fight;

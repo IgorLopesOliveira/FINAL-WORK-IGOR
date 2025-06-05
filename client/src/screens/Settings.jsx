@@ -106,8 +106,6 @@ export default function Settings() {
           background: none;
           border: none;
           cursor: pointer;
-          color: #2C2C2C;
-          transition: transform 0.2s ease;
         }
         [data-theme="dark"] {
           --bg: #232323;
