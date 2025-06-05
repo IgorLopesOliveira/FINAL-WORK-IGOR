@@ -73,7 +73,7 @@ function Score() {
         }
         .score-container div {
           font-size: 1.5rem;
-          margin-bottom: 1rem;
+          margin-bottom: 0.1rem;
         }
         ul {
           list-style: none;
@@ -92,7 +92,7 @@ function Score() {
           border: none;
           border-radius: 8px;
           cursor: pointer;
-          margin-top: 1.5rem;
+          margin-top: 0rem;
           transition: background 0.2s;
         }
         .main-btn:hover {

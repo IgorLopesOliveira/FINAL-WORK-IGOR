@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
-const punches = ["Jab", "Left hook", "Uppercut"];
+const punches = ["Jab", "Left hook","Right hook", "Left Uppercut", "Right Uppercut", "Cross"];
 
 const styles = {
   container: {
@@ -85,6 +85,53 @@ const styles = {
     textAlign: 'center',
     padding: '0 1rem',
   },
+  popupOverlay: {
+    position: 'fixed',
+    top: 0, left: 0, right: 0, bottom: 0,
+    background: 'rgba(44,44,44,0.25)',
+    zIndex: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  popup: {
+    background: '#fff',
+    borderRadius: '24px',
+    boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
+    padding: '36px 32px',
+    maxWidth: '400px',
+    width: '90%',
+    textAlign: 'center',
+    color: '#2C2C2C',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '1.5rem',
+  },
+  popupTitle: {
+    fontSize: '1.6rem',
+    fontWeight: 900,
+    marginBottom: '0.5rem',
+  },
+  popupText: {
+    fontSize: '1.1rem',
+    fontWeight: 400,
+    marginBottom: '0.5rem',
+    color: '#222',
+  },
+  popupButton: {
+    padding: '14px 32px',
+    borderRadius: '50px',
+    border: '2px solid #2C2C2C',
+    background: '#EFEFEF',
+    color: '#2C2C2C',
+    fontSize: '1.1rem',
+    fontWeight: '700',
+    cursor: 'pointer',
+    minWidth: '120px',
+    transition: 'all 0.2s ease',
+    marginTop: '10px',
+  },
 };
 
 function Memorize() {
@@ -98,6 +145,7 @@ function Memorize() {
   const [currentDisplay, setCurrentDisplay] = useState("");
   const [countdown, setCountdown] = useState(3);
   const [feedback, setFeedback] = useState("");
+  const [showInfo, setShowInfo] = useState(true);
   const punchCooldown = 1000;
   const lastPunchTimeRef = useRef(0);
 
@@ -108,7 +156,26 @@ function Memorize() {
       if (now - lastPunchTimeRef.current < punchCooldown) return;
       const punch = (data.type || "").toLowerCase().trim();
       const expected = (combo[currentIndex] || "").toLowerCase().trim();
+
+      // Accept jab/cross as equivalent, and left/right uppercut as equivalent
+      const FRONT_PUNCHES = ["jab", "cross"];
+      const UPPERCUT_PUNCHES = ["left uppercut", "right uppercut"];
+
       lastPunchTimeRef.current = now;
+
+      // If expected is jab or cross, accept either
+      if (FRONT_PUNCHES.includes(expected) && FRONT_PUNCHES.includes(punch)) {
+        setFeedback(combo[currentIndex]);
+        setCurrentIndex((prev) => prev + 1);
+        return;
+      }
+      // If expected is left/right uppercut, accept either
+      if (UPPERCUT_PUNCHES.includes(expected) && UPPERCUT_PUNCHES.includes(punch)) {
+        setFeedback(combo[currentIndex]);
+        setCurrentIndex((prev) => prev + 1);
+        return;
+      }
+      // Otherwise, strict match
       if (punch === expected) {
         setFeedback(combo[currentIndex]);
         setCurrentIndex((prev) => prev + 1);
@@ -124,7 +191,7 @@ function Memorize() {
   useEffect(() => {
     if (phase === "input" && currentIndex === combo.length && combo.length > 0) {
       setTimeout(() => {
-        if (combo.length === 10) {
+        if (combo.length === 2) {
           setPhase("win");
         } else {
           setTimeout(() => {
@@ -203,20 +270,49 @@ function Memorize() {
     setPhase("menu");
     setFeedback("");
     lastPunchTimeRef.current = 0;
+    setShowInfo(true);
   };
+
+  // Info popup before the game
+  const renderInfoPopup = () => (
+    <div style={styles.popupOverlay}>
+      <div style={styles.popup}>
+        <div style={styles.popupTitle}>{t("memorize.infoTitle", "How the game works")}</div>
+        <div style={styles.popupText}>
+          {t(
+            "memorize.infoText",
+            "You will have on the screen a punch type, you will have to hit the right punch. If correct you'll have a punch added to the one before, it's quick so you have to be focused. As you keep getting the combinations correct more punches will be added till you reach a 10 punch combination."
+          )}
+        </div>
+        <button style={styles.popupButton} onClick={() => setShowInfo(false)}>
+          {t("memorize.understood", "Understood")}
+        </button>
+      </div>
+    </div>
+  );
 
   // Render functions for each phase
   const renderMenu = () => (
     <div style={styles.centered}>
+      <button
+        style={{
+          ...styles.icon,
+          position: "absolute",
+          width: 40,
+          height: 40,
+          top: 20,
+          left: 20,
+          zIndex: 2,
+        }}
+        onClick={() => navigate("/minimenu")}
+        aria-label="Back"
+      >
+        <span style={styles.iconSymbol}>↩</span>
+      </button>
       <div style={styles.header}>
         <div />
         <h1 style={styles.title}>{t("memorize.memorizeTitle")}</h1>
-        <div
-          style={styles.icon}
-          onClick={() => navigate("/minimenu")}
-        >
-          <span style={styles.iconSymbol}>↩</span>
-        </div>
+        <div />
       </div>
       <button style={styles.button} onClick={startGame}>{t("memorize.start")}</button>
     </div>
@@ -259,6 +355,7 @@ function Memorize() {
     </div>
   );
 
+  if (showInfo) return <div style={styles.container}>{renderInfoPopup()}</div>;
   if (phase === "menu") return <div style={styles.container}>{renderMenu()}</div>;
   if (phase === "show") return <div style={styles.container}>{renderShow()}</div>;
   if (phase === "wait") return <div style={styles.container}>{renderWait()}</div>;

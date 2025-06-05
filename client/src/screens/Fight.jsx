@@ -132,15 +132,51 @@ function Fight() {
   // Listen for punches and count by type
   useEffect(() => {
     if (!socket) return;
+    let lastFrontPunchTime = 0;
+    let lastUppercutTime = 0;
+    const FRONT_PUNCHES = ["jab", "cross"];
+    const UPPERCUT_PUNCHES = ["left uppercut", "right uppercut"];
+    const FRONT_PUNCH_COOLDOWN = 400; // ms
+    const UPPERCUT_PUNCH_COOLDOWN = 400; // ms
+
     const punchHandler = (data) => {
-      setPunchCount((c) => c + 1);
-      if (data && data.type) {
+      if (!data || !data.type) return;
+      const punchType = data.type.toLowerCase();
+
+      // Jab/Cross: treat as one punch with cooldown
+      if (FRONT_PUNCHES.includes(punchType)) {
+        const now = Date.now();
+        if (now - lastFrontPunchTime < FRONT_PUNCH_COOLDOWN) return;
+        lastFrontPunchTime = now;
+        setPunchCount((c) => c + 1);
         setPunchesByType((prev) => ({
           ...prev,
-          [data.type]: (prev[data.type] || 0) + 1,
+          [punchType]: (prev[punchType] || 0) + 1,
         }));
+        return;
       }
+
+      // Left/Right Uppercut: treat as one punch with cooldown
+      if (UPPERCUT_PUNCHES.includes(punchType)) {
+        const now = Date.now();
+        if (now - lastUppercutTime < UPPERCUT_PUNCH_COOLDOWN) return;
+        lastUppercutTime = now;
+        setPunchCount((c) => c + 1);
+        setPunchesByType((prev) => ({
+          ...prev,
+          [punchType]: (prev[punchType] || 0) + 1,
+        }));
+        return;
+      }
+
+      // Other punches (hooks, etc.)
+      setPunchCount((c) => c + 1);
+      setPunchesByType((prev) => ({
+        ...prev,
+        [punchType]: (prev[punchType] || 0) + 1,
+      }));
     };
+
     socket.on("punch", punchHandler);
     return () => socket.off("punch", punchHandler);
   }, [socket]);
