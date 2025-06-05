@@ -70,5 +70,34 @@
     "lightMode": "Modo claro",
     "reset": "Reiniciar progreso",
     "confirmReset": "¿Estás seguro de que deseas reiniciar tu progreso?"
+  },
+  "tutorialP": {
+    "title": "Tutorial de Golpes de Boxeo",
+    "intro1": "Primero, repasemos los diferentes tipos de golpes en el boxeo.",
+    "stanceTitle": "Postura",
+    "stanceText": "Si eres diestro, pie izquierdo al frente y pie derecho atrás, la mano izquierda es la principal y la derecha la trasera. Si eres zurdo, al revés.",
+    "jabTitle": "Jab",
+    "jabText": "Lanza tu mano izquierda y gira el pie izquierdo. El objetivo es golpear con todo el cuerpo, no solo con el brazo.",
+    "crossTitle": "Cross",
+    "crossText": "Lanza tu mano derecha recta, gira el pie derecho y rota las caderas para obtener potencia.",
+    "leftHookTitle": "Hook Izquierdo",
+    "leftHookText": "Lanza tu brazo izquierdo en un arco horizontal, gira el pie izquierdo y rota las caderas.",
+    "rightHookTitle": "Hook Derecho",
+    "rightHookText": "Lanza tu brazo derecho en un arco horizontal, gira el pie derecho y rota las caderas.",
+    "leftUppercutTitle": "Uppercut Izquierdo",
+    "leftUppercutText": "Flexiona las rodillas, baja la mano izquierda y luego lánzala hacia arriba con las piernas y las caderas.",
+    "rightUppercutTitle": "Uppercut Derecho",
+    "rightUppercutText": "Flexiona las rodillas, baja la mano derecha y luego lánzala hacia arriba con las piernas y las caderas.",
+    "jabCrossTitle": "Jab-Cross",
+    "jabCrossText": "Lanza un jab con tu mano principal y sigue inmediatamente con un cross con tu mano trasera.",
+    "soundsTitle": "Sonidos del Boxeo",
+    "soundsText": "Ahora escuchemos los diferentes sonidos en el boxeo.",
+    "tripleTapTitle": "Triple Golpe",
+    "tripleTapText": "Esto es un triple golpe, anuncia que quedan 10 segundos antes de terminar o comenzar un round.",
+    "tripleBellTitle": "Triple Campana",
+    "tripleBellText": "Esto es una triple campana, anuncia el final de un round.",
+    "endTitle": "¡Tutorial Completado!",
+    "endText": "Has completado el tutorial. ¡Practica y diviértete!"
   }
+
 }

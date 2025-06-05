@@ -70,5 +70,34 @@
     "lightMode": "Lichte modus",
     "reset": "Voortgang resetten",
     "confirmReset": "Weet je zeker dat je je voortgang wilt resetten?"
+  },
+  "tutorialP": {
+    "title": "Bokstechnieken Tutorial",
+    "intro1": "Laten we eerst de verschillende soorten stoten in het boksen doornemen.",
+    "stanceTitle": "Houding",
+    "stanceText": "Als je rechtshandig bent: linker voet voor, rechter voet achter, linkerhand is je voorste hand, rechterhand is je achterste. Bij linkshandigen is het andersom.",
+    "jabTitle": "Jab",
+    "jabText": "Gooi je linkerhand naar voren en draai je linkervoet. Het doel is om met je hele lichaam te stoten, niet alleen met je arm.",
+    "crossTitle": "Cross",
+    "crossText": "Stoot met je rechterhand recht naar voren, draai je rechtervoet en je heupen voor kracht.",
+    "leftHookTitle": "Linker Hoek",
+    "leftHookText": "Sla met je linkerarm in een horizontale boog, draai je linkervoet en je heupen mee.",
+    "rightHookTitle": "Rechter Hoek",
+    "rightHookText": "Sla met je rechterarm in een horizontale boog, draai je rechtervoet en je heupen mee.",
+    "leftUppercutTitle": "Linker Uppercut",
+    "leftUppercutText": "Buig je knieën, laat je linkerhand zakken en duw hem dan omhoog met je benen en heupen.",
+    "rightUppercutTitle": "Rechter Uppercut",
+    "rightUppercutText": "Buig je knieën, laat je rechterhand zakken en duw hem dan omhoog met je benen en heupen.",
+    "jabCrossTitle": "Jab-Cross",
+    "jabCrossText": "Geef een jab met je voorste hand en volg direct met een cross vanuit je achterste hand.",
+    "soundsTitle": "Boksgeluiden",
+    "soundsText": "Laten we nu luisteren naar de verschillende geluiden in het boksen.",
+    "tripleTapTitle": "Drievoudige Tik",
+    "tripleTapText": "Dit is een drievoudige tik. Het geeft aan dat je nog 10 seconden hebt voor het einde of begin van een ronde.",
+    "tripleBellTitle": "Drievoudige Bel",
+    "tripleBellText": "Dit is een drievoudige bel. Het geeft het einde van een ronde aan.",
+    "endTitle": "Tutorial Voltooid!",
+    "endText": "Je hebt de tutorial voltooid. Oefen en veel plezier!"
   }
+
 }

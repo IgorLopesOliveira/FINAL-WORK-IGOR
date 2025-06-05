@@ -29,7 +29,7 @@ function Welcome() {
   };
 
   const handleTutorial = () => {
-    alert(t("tutorial")); // Example: use translation for alert
+    window.location.href = "/tutorial"; // Example: use translation for alert
   };
 
   const handleSkip = () => {

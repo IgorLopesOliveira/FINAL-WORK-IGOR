@@ -70,5 +70,33 @@
     "lightMode": "Light Mode",
     "reset": "Reset Progress",
     "confirmReset": "Are you sure you want to reset your progress?"
+  },
+  "tutorialP": {
+    "title": "Boxing Punches Tutorial",
+    "intro1": "First, let's go through the different types of punches in boxing.",
+    "stanceTitle": "Stance",
+    "stanceText": "If you're right handed, left foot front right foot behind, left hand is your lead hand and right hand is your rear. Left handed is the other way.",
+    "jabTitle": "Jab",
+    "jabText": "Throw your left and twist your left foot. The goal is to punch with your whole body, not just your arm.",
+    "crossTitle": "Cross",
+    "crossText": "Throw your right hand straight, pivot your right foot and rotate your hips for power.",
+    "leftHookTitle": "Left Hook",
+    "leftHookText": "Swing your left arm in a horizontal arc, pivot your left foot and rotate your hips.",
+    "rightHookTitle": "Right Hook",
+    "rightHookText": "Swing your right arm in a horizontal arc, pivot your right foot and rotate your hips.",
+    "leftUppercutTitle": "Left Uppercut",
+    "leftUppercutText": "Bend your knees, drop your left hand, then drive it upward with your legs and hips.",
+    "rightUppercutTitle": "Right Uppercut",
+    "rightUppercutText": "Bend your knees, drop your right hand, then drive it upward with your legs and hips.",
+    "jabCrossTitle": "Jab-Cross",
+    "jabCrossText": "Throw a jab with your lead hand, then immediately follow with a cross from your rear hand.",
+    "soundsTitle": "Boxing Sounds",
+    "soundsText": "Now let's listen to the different sounds in boxing.",
+    "tripleTapTitle": "Triple Tap",
+    "tripleTapText": "This is a triple tap, it announces that you have 10 seconds before ending a round or before starting a round.",
+    "tripleBellTitle": "Triple Bell",
+    "tripleBellText": "This is a triple bell, it announces the end of a round.",
+    "endTitle": "Tutorial Complete!",
+    "endText": "You completed the tutorial. Practice and have fun!"
   }
 }

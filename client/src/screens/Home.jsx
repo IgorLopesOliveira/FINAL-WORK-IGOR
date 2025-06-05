@@ -25,7 +25,7 @@ export default function Home() {
         <button style={styles.button} onClick={() => navigate('/minimenu')}>
           {t("home.miniGames")}
         </button>
-        <button style={styles.button} onClick={() => alert(t("home.tutorial"))}>
+        <button style={styles.button} onClick={() => navigate('/tutorial')}>
           {t("home.tutorial")}
         </button>
       </div>

@@ -70,5 +70,34 @@
     "lightMode": "Mode clair",
     "reset": "Réinitialiser la progression",
     "confirmReset": "Es-tu sûr de vouloir réinitialiser ta progression ?"
+  },
+  "tutorialP": {
+    "title": "Tutoriel des Coups de Boxe",
+    "intro1": "Commençons par passer en revue les différents types de coups en boxe.",
+    "stanceTitle": "Garde",
+    "stanceText": "Si tu es droitier, pied gauche devant, pied droit derrière, main gauche en avant et main droite en arrière. Pour les gauchers, c’est l’inverse.",
+    "jabTitle": "Jab",
+    "jabText": "Lance ton poing gauche et pivote ton pied gauche. Le but est de frapper avec tout ton corps, pas seulement ton bras.",
+    "crossTitle": "Cross",
+    "crossText": "Lance ton poing droit bien droit, pivote ton pied droit et fais tourner tes hanches pour plus de puissance.",
+    "leftHookTitle": "Crochet Gauche",
+    "leftHookText": "Fais un arc horizontal avec ton bras gauche, pivote ton pied gauche et fais tourner tes hanches.",
+    "rightHookTitle": "Crochet Droit",
+    "rightHookText": "Fais un arc horizontal avec ton bras droit, pivote ton pied droit et fais tourner tes hanches.",
+    "leftUppercutTitle": "Uppercut Gauche",
+    "leftUppercutText": "Plie les genoux, abaisse la main gauche, puis pousse-la vers le haut avec les jambes et les hanches.",
+    "rightUppercutTitle": "Uppercut Droit",
+    "rightUppercutText": "Plie les genoux, abaisse la main droite, puis pousse-la vers le haut avec les jambes et les hanches.",
+    "jabCrossTitle": "Jab-Cross",
+    "jabCrossText": "Lance un jab avec ta main avant, puis enchaîne immédiatement avec un cross de la main arrière.",
+    "soundsTitle": "Sons de Boxe",
+    "soundsText": "Écoutons maintenant les différents sons utilisés en boxe.",
+    "tripleTapTitle": "Triple Tapotement",
+    "tripleTapText": "Ceci est un triple tapotement, il annonce qu'il reste 10 secondes avant la fin ou le début d'un round.",
+    "tripleBellTitle": "Triple Grelot",
+    "tripleBellText": "Ceci est un triple grelot, il annonce la fin d'un round.",
+    "endTitle": "Tutoriel Terminé !",
+    "endText": "Tu as terminé le tutoriel. Entraîne-toi et amuse-toi !"
   }
+
 }

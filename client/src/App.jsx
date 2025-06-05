@@ -3,7 +3,7 @@ import './App.css';
 import './i18n';
 
 import Welcome from './screens/Welcome';
-// import Tutorial from './screens/Tutorial';
+import Tutorial from './screens/Tutorial';
 import Home from './screens/Home';
 import Fight from './screens/Fight';
 import MiniMenu from './screens/MiniMenu';
@@ -21,7 +21,7 @@ function App() {
     <SocketProvider>
       <Routes>
         <Route path="/" element={<Welcome />} />
-        {/* <Route path="/tutorial" element={<Tutorial />} /> */}
+        <Route path="/tutorial" element={<Tutorial />} />
         <Route path="/home" element={<Home />} /> 
         <Route path="/fight" element={<Fight />} />
         <Route path="/minimenu" element={<MiniMenu />} />
