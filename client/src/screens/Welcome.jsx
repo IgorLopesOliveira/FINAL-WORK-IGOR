@@ -108,7 +108,7 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Lexend', sans-serif",
     color: "#2C2C2C",
   },
   container: {

@@ -42,7 +42,7 @@ const styles = {
     maxHeight: '393px',
     background: '#EFEFEF',
     color: '#2C2C2C',
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Lexend', sans-serif",
     display: 'flex',
     flexDirection: 'column',
     padding: '20px',
@@ -85,6 +85,7 @@ const styles = {
   },
   button: {
     padding: '20px 30px',
+    fontFamily: "'Lexend', sans-serif",
     borderRadius: '50px',
     border: '2px solid #2C2C2C',
     background: '#EFEFEF',

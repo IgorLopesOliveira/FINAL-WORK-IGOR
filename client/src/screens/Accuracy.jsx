@@ -15,7 +15,7 @@ const styles = {
     maxHeight: '393px',
     background: '#EFEFEF',
     color: '#2C2C2C',
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Lexend', sans-serif",
     display: 'flex',
     flexDirection: 'column',
     padding: '20px',
@@ -54,6 +54,7 @@ const styles = {
     marginBottom: '2rem',
   },
   button: {
+    fontFamily: "'Lexend', sans-serif",
     padding: '20px 30px',
     borderRadius: '50px',
     border: '2px solid #2C2C2C',
@@ -97,6 +98,7 @@ const styles = {
     justifyContent: 'center',
   },
   popup: {
+    fontFamily: "'Lexend', sans-serif",
     background: '#fff',
     borderRadius: '24px',
     boxShadow: '0 4px 24px rgba(0,0,0,0.10)',
@@ -122,6 +124,7 @@ const styles = {
     color: '#222',
   },
   popupButton: {
+    fontFamily: "'Lexend', sans-serif",
     padding: '14px 32px',
     borderRadius: '50px',
     border: '2px solid #2C2C2C',
@@ -236,15 +239,31 @@ function Accuracy() {
   // Render functions
   const renderMenu = () => (
     <div style={styles.centered}>
+      <button
+        style={{
+          position: "absolute",
+          top: 24,
+          right: 32,
+          background: "none",
+          border: "none",
+          color: "#2C2C2C",
+          fontSize: "2rem",
+          cursor: "pointer",
+          zIndex: 2,
+          padding: 0,
+          width: "auto",
+          height: "auto",
+          boxShadow: "none",
+        }}
+        onClick={() => navigate("/minimenu")}
+        aria-label="Back"
+      >
+        <span style={{ fontSize: "2rem", lineHeight: 1 }}>↩</span>
+      </button>
       <div style={styles.header}>
         <div />
         <h1 style={styles.title}>{t("accuracy.title", "Accuracy Game")}</h1>
-        <div
-          style={styles.icon}
-          onClick={() => navigate("/minimenu")}
-        >
-          <span style={styles.iconSymbol}>↩</span>
-        </div>
+        <div />
       </div>
       <button style={styles.button} onClick={startGame}>{t("accuracy.start", "Start")}</button>
     </div>

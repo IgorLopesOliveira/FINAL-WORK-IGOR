@@ -57,7 +57,7 @@ export default function Settings() {
         .settings-container {
           min-height: 100vh;
           background: var(--bg, #EFEFEF);
-          font-family: 'Inter', sans-serif;
+          font-family: 'Lexend', sans-serif;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -106,6 +106,10 @@ export default function Settings() {
           background: none;
           border: none;
           cursor: pointer;
+        }
+        /* Remove hover effect for back button */
+        .back-button:hover {
+          background: none;
         }
         [data-theme="dark"] {
           --bg: #232323;

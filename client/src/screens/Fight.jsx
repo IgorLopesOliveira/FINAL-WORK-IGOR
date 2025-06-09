@@ -11,7 +11,7 @@ const styles = {
     maxHeight: '393px',
     background: '#EFEFEF',
     color: '#2C2C2C',
-    fontFamily: "'Neue Montreal', sans-serif",
+    fontFamily: "'Lexend', sans-serif",
     display: 'flex',
     flexDirection: 'column',
     padding: '20px',
@@ -51,6 +51,7 @@ const styles = {
     marginBottom: '20px',
   },
   button: {
+    fontFamily: "'Lexend', sans-serif",
     padding: '20px 30px',
     borderRadius: '50px',
     border: '2px solid #2C2C2C',

@@ -59,7 +59,7 @@ function Score() {
         .score-container {
           height: 100vh;
           background: #EFEFEF;
-          font-family: 'Inter', sans-serif;
+          font-family: 'Lexend', sans-serif;
           display: flex;
           flex-direction: column;
           align-items: center;

@@ -10,7 +10,7 @@ const styles = {
     maxHeight: '393px',
     background: '#EFEFEF',
     color: '#2C2C2C',
-    fontFamily: "'Neue Montreal', sans-serif",
+    fontFamily: "'Lexend', sans-serif",
     display: 'flex',
     flexDirection: 'column',
     padding: '20px',

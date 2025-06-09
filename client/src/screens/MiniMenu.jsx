@@ -21,7 +21,7 @@ export default function MiniMenu() {
         .mini-menu-container {
           height: 100vh;
           background: #EFEFEF;
-          font-family: 'Inter', sans-serif;
+          font-family: 'Lexend', sans-serif;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -34,11 +34,13 @@ export default function MiniMenu() {
           margin-bottom: 2rem;
         }
         .mini-menu-buttons {
+          font-family: 'Lexend', sans-serif;
           display: flex;
           flex-direction: column;
           gap: 2rem;
         }
         .mini-btn {
+          font-family: 'Lexend', sans-serif;
           font-size: 1.5rem;
           padding: 1rem 3rem;
           background: #2C2C2C;
@@ -58,6 +60,10 @@ export default function MiniMenu() {
           background: none;
           border: none;
           cursor: pointer;
+        }
+        /* Remove hover effect for back button */
+        .back-button:hover {
+          background: none;
         }
       `}</style>
     </div>
