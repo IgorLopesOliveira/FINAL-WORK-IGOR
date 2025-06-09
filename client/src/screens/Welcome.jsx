@@ -120,7 +120,7 @@ const styles = {
 };
 
 const cssStyles = `
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Boldonse&family=Bungee&family=Lato:wght@700&family=Lexend:wght@100..900&family=M+PLUS+Rounded+1c&display=swap');
 
 * {
   margin: 0;

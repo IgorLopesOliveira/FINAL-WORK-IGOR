@@ -48,6 +48,16 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
+  },
+  roundsSelector: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  },
+  restSelector: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
     marginBottom: '20px',
   },
   button: {
@@ -106,9 +116,11 @@ const styles = {
 
 function Fight() {
   const socket = useSocket();
-  const [fightState, setFightState] = useState("config"); // config, countdown, fighting, paused
-  const [prevFightState, setPrevFightState] = useState(null); // Track previous state
-  const [roundTime, setRoundTime] = useState(3); // in minutes
+  const [fightState, setFightState] = useState("config");
+  const [roundTime, setRoundTime] = useState(3);
+  const [numRounds, setNumRounds] = useState(1);
+  const [restTime, setRestTime] = useState(1);
+  const [currentRound, setCurrentRound] = useState(1);
   const [timeLeft, setTimeLeft] = useState(0);
   const [punchCount, setPunchCount] = useState(0);
   const [hidePunches, setHidePunches] = useState(false);
@@ -117,7 +129,6 @@ function Fight() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  // Sound refs
   const tripleTapRef = useRef(null);
   const tripleBellRef = useRef(null);
 
@@ -128,140 +139,128 @@ function Fight() {
     setPunchesByType({});
     setHidePunches(false);
     setFlipLayout(false);
+    setCurrentRound(1);
   };
 
-  // Listen for punches and count by type
   useEffect(() => {
     if (!socket) return;
     let lastFrontPunchTime = 0;
     let lastUppercutTime = 0;
     const FRONT_PUNCHES = ["jab", "cross"];
     const UPPERCUT_PUNCHES = ["left uppercut", "right uppercut"];
-    const FRONT_PUNCH_COOLDOWN = 400; // ms
-    const UPPERCUT_PUNCH_COOLDOWN = 400; // ms
+    const FRONT_PUNCH_COOLDOWN = 400;
+    const UPPERCUT_PUNCH_COOLDOWN = 400;
 
     const punchHandler = (data) => {
-      if (!data || !data.type) return;
+      if (!data?.type) return;
       const punchType = data.type.toLowerCase();
+      const now = Date.now();
 
-      // Jab/Cross: treat as one punch with cooldown
       if (FRONT_PUNCHES.includes(punchType)) {
-        const now = Date.now();
         if (now - lastFrontPunchTime < FRONT_PUNCH_COOLDOWN) return;
         lastFrontPunchTime = now;
-        setPunchCount((c) => c + 1);
-        setPunchesByType((prev) => ({
-          ...prev,
-          [punchType]: (prev[punchType] || 0) + 1,
-        }));
-        return;
-      }
-
-      // Left/Right Uppercut: treat as one punch with cooldown
-      if (UPPERCUT_PUNCHES.includes(punchType)) {
-        const now = Date.now();
+      } else if (UPPERCUT_PUNCHES.includes(punchType)) {
         if (now - lastUppercutTime < UPPERCUT_PUNCH_COOLDOWN) return;
         lastUppercutTime = now;
-        setPunchCount((c) => c + 1);
-        setPunchesByType((prev) => ({
-          ...prev,
-          [punchType]: (prev[punchType] || 0) + 1,
-        }));
-        return;
       }
 
-      // Other punches (hooks, etc.)
-      setPunchCount((c) => c + 1);
-      setPunchesByType((prev) => ({
-        ...prev,
-        [punchType]: (prev[punchType] || 0) + 1,
-      }));
+      setPunchCount(c => c + 1);
+      setPunchesByType(prev => ({ ...prev, [punchType]: (prev[punchType] || 0) + 1 }));
     };
 
     socket.on("punch", punchHandler);
     return () => socket.off("punch", punchHandler);
   }, [socket]);
 
-  // Timer countdown for fighting phase
   useEffect(() => {
-    if (fightState !== "fighting" || timeLeft <= 0) return;
-    const interval = setInterval(() => setTimeLeft((t) => t - 1), 1000);
-    return () => clearInterval(interval);
-  }, [fightState, timeLeft]);
+    if (!["countdown", "fighting", "rest"].includes(fightState) || timeLeft <= 0) return;
 
-  // When fight ends, navigate to score page with stats
-  useEffect(() => {
-    if (fightState === "fighting" && timeLeft === 0) {
-      const totalSeconds = roundTime * 60;
-      const punchesPerMinute = totalSeconds > 0 ? Math.round((punchCount / totalSeconds) * 60) : 0;
-      navigate("/score", {
-        state: {
-          timeChosen: totalSeconds,
-          punchesPerMinute,
-          punchesByType,
-        },
-      });
-    }
-  }, [fightState, timeLeft, roundTime, punchCount, punchesByType, navigate]);
-
-  // Track previous fightState
-  useEffect(() => {
-    setPrevFightState(fightState);
-  }, [fightState]);
-
-  // Play sounds at correct moments
-  useEffect(() => {
-    if (fightState === "countdown" && tripleTapRef.current) {
+    if (timeLeft === 10 && tripleTapRef.current) {
       tripleTapRef.current.currentTime = 0;
       tripleTapRef.current.play();
     }
-    // Only play bell if coming from countdown
-    if (
-      fightState === "fighting" &&
-      prevFightState === "countdown" &&
-      tripleBellRef.current
-    ) {
-      tripleBellRef.current.currentTime = 0;
-      tripleBellRef.current.play();
-    }
-  }, [fightState, prevFightState]);
 
-  const startCountdown = () => {
-    setPunchesByType({});
-    setPunchCount(0);
-    setFightState("countdown");
-    setTimeLeft(10);
-    const countdown = setInterval(() => {
-      setTimeLeft((t) => {
-        if (t <= 1) {
-          clearInterval(countdown);
+    const interval = setInterval(() => setTimeLeft(t => t - 1), 1000);
+    return () => clearInterval(interval);
+  }, [fightState, timeLeft]);
+
+  useEffect(() => {
+    // Pre-first round bell
+    if (fightState === "countdown" && timeLeft === 0) {
+      if (tripleBellRef.current) {
+        tripleBellRef.current.currentTime = 0;
+        tripleBellRef.current.play();
+      }
+      setFightState("fighting");
+      setTimeLeft(roundTime * 60);
+    }
+
+    // End-of-round bell + transition
+    if (fightState === "fighting" && timeLeft === 0) {
+      if (tripleBellRef.current) {
+        tripleBellRef.current.currentTime = 0;
+        tripleBellRef.current.play();
+      }
+      if (currentRound < numRounds) {
+        if (restTime > 0) {
+          setFightState("rest");
+          setTimeLeft(restTime * 60);
+        } else {
+          setCurrentRound(r => r + 1);
           setFightState("fighting");
           setTimeLeft(roundTime * 60);
         }
-        return t - 1;
-      });
-    }, 1000);
+      } else {
+        const totalSec = roundTime * 60 * numRounds;
+        const ppm = totalSec ? Math.round((punchCount / totalSec) * 60) : 0;
+        navigate("/score", { state: { timeChosen: roundTime * 60, numRounds, restTime, punchesPerMinute: ppm, punchesByType } });
+      }
+    }
+
+    // End-of-rest bell + next round start
+    if (fightState === "rest" && timeLeft === 0) {
+      if (tripleBellRef.current) {
+        tripleBellRef.current.currentTime = 0;
+        tripleBellRef.current.play();
+      }
+      setCurrentRound(r => r + 1);
+      setFightState("fighting");
+      setTimeLeft(roundTime * 60);
+    }
+  }, [fightState, timeLeft, currentRound, numRounds, restTime, roundTime, punchCount, punchesByType, navigate]);
+
+  const startCountdown = () => {
+    setPunchCount(0);
+    setPunchesByType({});
+    setCurrentRound(1);
+    setFightState("countdown");
+    setTimeLeft(10);
   };
 
-  const formatTime = (s) => {
+  const formatTime = s => {
     const m = Math.floor(s / 60);
     const sec = s % 60;
-    return `${m.toString().padStart(2, "0")}:${sec.toString().padStart(2, "0")}`;
+    return `${m.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
   };
 
-  // UI Renders
   const renderConfig = () => (
     <div style={styles.container}>
       <button style={styles.backButton} onClick={() => navigate("/home")}>↩</button>
-      <div style={styles.header}>
-        <div />
-        <h1 style={styles.title}>{t("fight.roundTime")}</h1>
-        <div />
-      </div>
+      <div style={styles.header}><div/><h1 style={styles.title}>{t("fight.roundTime")}</h1><div/></div>
       <div style={styles.timeSelector}>
-        <button style={styles.smallButton} onClick={() => setRoundTime((t) => Math.max(1, t - 1))}>-</button>
-        <span style={{ fontSize: '1.5rem', fontWeight: '700' }}>{roundTime} {t("fight.minutes")}</span>
-        <button style={styles.smallButton} onClick={() => setRoundTime((t) => Math.min(10, t + 1))}>+</button>
+        <button style={styles.smallButton} onClick={() => setRoundTime(t => Math.max(1, t-1))}>-</button>
+        <span style={{fontSize:'1.5rem',fontWeight:'700'}}>{roundTime} {t("fight.minutes")}</span>
+        <button style={styles.smallButton} onClick={() => setRoundTime(t => Math.min(10, t+1))}>+</button>
+      </div>
+      <div style={styles.roundsSelector}>
+        <button style={styles.smallButton} onClick={() => setNumRounds(n => Math.max(1, n-1))}>-</button>
+        <span style={{fontSize:'1.5rem',fontWeight:'700'}}>{numRounds} {t("fight.rounds", "Rounds")}</span>
+        <button style={styles.smallButton} onClick={() => setNumRounds(n => Math.min(12, n+1))}>+</button>
+      </div>
+      <div style={styles.restSelector}>
+        <button style={styles.smallButton} onClick={() => setRestTime(r => Math.max(0, r-1))}>-</button>
+        <span style={{fontSize:'1.5rem',fontWeight:'700'}}>{restTime} {t("fight.rest", "Rest (min)")}</span>
+        <button style={styles.smallButton} onClick={() => setRestTime(r => Math.min(5, r+1))}>+</button>
       </div>
       <button style={styles.button} onClick={startCountdown}>{t("fight.start")}</button>
     </div>
@@ -269,30 +268,41 @@ function Fight() {
 
   const renderCountdown = () => (
     <div style={styles.container}>
-      <h1 style={{ fontSize: '6rem', fontWeight: '900' }}>{timeLeft}</h1>
+      <h2 style={{fontSize:'2rem',fontWeight:'700',marginBottom:0}}>{t("fight.round", "Round")} {currentRound}/{numRounds}</h2>
+      <h1 style={{fontSize:'6rem',fontWeight:'900'}}>{timeLeft}</h1>
     </div>
   );
 
   const renderFighting = () => (
     <div style={styles.container}>
+      <h2 style={{fontSize:'2rem',fontWeight:'700',marginBottom:0}}>{t("fight.round", "Round")} {currentRound}/{numRounds}</h2>
       <div style={styles.fighting}>
-        <div style={{ order: flipLayout ? 2 : 1 }}>{formatTime(timeLeft)}</div>
-        {!hidePunches && <div style={{ order: flipLayout ? 1 : 2 }}>{punchCount}</div>}
+        <div style={{order: flipLayout? 2 : 1}}>{formatTime(timeLeft)}</div>
+        {!hidePunches && <div style={{order: flipLayout?1:2}}>{punchCount}</div>}
         <button style={styles.button} onClick={() => setFightState("paused")}>{t("fight.pause")}</button>
       </div>
     </div>
   );
 
+  const renderRest = () => (
+    <div style={styles.container}>
+      <h2 style={{fontSize:'2rem',fontWeight:'700',marginBottom:0}}>{t("fight.restBetween", "Rest Between Rounds")}</h2>
+      <h1 style={{fontSize:'6rem',fontWeight:'900'}}>{formatTime(timeLeft)}</h1>
+      <div style={{fontSize:'1.5rem',marginTop:20}}>{t("fight.nextRound", "Next round starts soon...")}</div>
+    </div>
+  );
+
   const renderPaused = () => (
     <div style={styles.container}>
+      <h2 style={{fontSize:'2rem',fontWeight:'700',marginBottom:0}}>{t("fight.round", "Round")} {currentRound}/{numRounds}</h2>
       <div style={styles.paused}>
-        <div style={{ order: flipLayout ? 2 : 1 }}>{formatTime(timeLeft)}</div>
-        {!hidePunches && <div style={{ order: flipLayout ? 1 : 2 }}>{punchCount}</div>}
+        <div style={{order: flipLayout?2:1}}>{formatTime(timeLeft)}</div>
+        {!hidePunches && <div style={{order: flipLayout?1:2}}>{punchCount}</div>}
       </div>
       <div style={styles.buttonGroup}>
-        <button style={styles.button} onClick={() => setHidePunches((v) => !v)}>{t("fight.hide")}</button>
+        <button style={styles.button} onClick={() => setHidePunches(v => !v)}>{t("fight.hide")}</button>
         <button style={styles.button} onClick={() => setFightState("fighting")}>▶</button>
-        <button style={styles.button} onClick={() => setFlipLayout((v) => !v)}>{t("fight.switch")}</button>
+        <button style={styles.button} onClick={() => setFlipLayout(v => !v)}>{t("fight.switch")}</button>
         <button style={styles.button} onClick={resetFight}>{t("fight.stop")}</button>
       </div>
     </div>
@@ -300,13 +310,13 @@ function Fight() {
 
   return (
     <>
-      {/* Audio elements for sounds */}
       <audio ref={tripleTapRef} src="/sounds/triple-tap.mp3" preload="auto" />
       <audio ref={tripleBellRef} src="/sounds/boxing-bell.mp3" preload="auto" />
       {fightState === "config" && renderConfig()}
       {fightState === "countdown" && renderCountdown()}
-      {fightState === "paused" && renderPaused()}
       {fightState === "fighting" && renderFighting()}
+      {fightState === "rest" && renderRest()}
+      {fightState === "paused" && renderPaused()}
     </>
   );
 }
