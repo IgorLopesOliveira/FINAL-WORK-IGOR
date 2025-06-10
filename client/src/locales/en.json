@@ -1,55 +1,62 @@
 {
-  "welcome": "WELCOME",
-  "toSparx": "to SPARX",
+  "welcome": "Welcome",
+  "toSparx": "to Sparx",
   "selectLanguage": "Select Language",
+  "chooseLanguage": "Choose language",
   "selectAge": "Select Age",
-  "chooseLanguage": "Choose Language",
-  "chooseAge": "Choose Age",
+  "chooseAge": "Choose age",
   "confirm": "Confirm",
   "tutorial": "Tutorial",
   "skip": "Skip",
+
   "home": {
     "menu": "Menu",
     "freeFight": "Free Fight",
-    "miniGames": "Mini-games",
-    "tutorial": "Tutorial",
-    "userProfile": "User Profile",
-    "settings": "Settings"
+    "miniGames": "Mini Games",
+    "tutorial": "Tutorial"
   },
-  "score": {
-    "results": "Fight Results",
-    "timeChosen": "Time chosen",
-    "seconds": "seconds",
-    "punchesPerMinute": "Punches per minute",
-    "punchesByType": "Punches by type",
-    "backToFight": "Back to Fight"
+
+  "minimenu": {
+    "menuTitle": "Mini-Games",
+    "memorize": "Memorize",
+    "accuracy": "Accuracy"
   },
+
   "fight": {
-    "roundTime": "Round time",
-    "minutes": "minutes",
+    "roundTime": "Round Time",
+    "minutes": "min",
+    "rounds": "Rounds",
+    "round": "Round",
+    "rest": "Rest (min)",
+    "restBetween": "Rest Between Rounds",
+    "nextRound": "Next round starts soon...",
     "start": "Start",
     "pause": "Pause",
-    "hide": "Hide",
+    "stop": "Stop",
     "switch": "Switch",
-    "stop": "Stop"
+    "hide": "Hide"
   },
+
   "memorize": {
     "memorizeTitle": "Memorize the combination",
-    "start": "Start",
-    "yourTurn": "Your turn",
-    "wrongPunch": "Wrong Punch",
+    "jabToStart": "Put your gloves on and throw a jab to start",
+    "throwJab": "Throw a jab to start!",
+    "infoTitle": "How the game works",
+    "infoText": "You will have on the screen a punch type, you will have to hit the right punch. If correct you'll have a punch added to the one before, it's quick so you have to be focused. As you keep getting the combinations correct more punches will be added till you reach a 10 punch combination.",
+    "understood": "Understood",
+    "yourTurn": "Your turn!",
+    "wrongPunch": "Wrong punch!",
     "tryAgain": "Try Again",
     "completed": "You completed all 10 punches!",
     "playAgain": "Play Again"
   },
-  "account": {
-    "title": "Your Fight Scores",
-    "noScores": "No scores yet.",
-    "date": "Date"
-  },
+
   "accuracy": {
     "title": "Accuracy Game",
-    "start": "Start",
+    "jabToStart": "Put your gloves on and throw a jab to start",
+    "infoTitle": "How the game works",
+    "infoText": "You will see a punch type on the screen. You must hit the correct punch as quickly as possible before the timer runs out. Each time you get it right, the time to react gets shorter. Complete 10 punches in a row to win!",
+    "understood": "Understood",
     "hit": "Hit this punch!",
     "wrongPunch": "Wrong Punch",
     "backToMenu": "Back to Accuracy Menu",
@@ -57,11 +64,22 @@
     "playAgain": "Play Again",
     "timeLeft": "Time left"
   },
-  "minimenu": {
-    "menuTitle": "Mini-Games",
-    "memorize": "Memorize",
-    "accuracy": "Accuracy"
+
+  "account": {
+    "title": "Your Fight Scores",
+    "noScores": "No scores yet.",
+    "date": "Date"
   },
+
+  "score": {
+    "results": "Results",
+    "timeChosen": "Time chosen",
+    "seconds": "seconds",
+    "punchesPerMinute": "Punches per minute",
+    "punchesByType": "Punches by type",
+    "backToFight": "Back to Fight"
+  },
+
   "settings": {
     "title": "Settings",
     "language": "Language",
@@ -71,32 +89,33 @@
     "reset": "Reset Progress",
     "confirmReset": "Are you sure you want to reset your progress?"
   },
+
   "tutorialP": {
-    "title": "Boxing Punches Tutorial",
-    "intro1": "First, let's go through the different types of punches in boxing.",
-    "stanceTitle": "Stance",
-    "stanceText": "If you're right handed, left foot front right foot behind, left hand is your lead hand and right hand is your rear. Left handed is the other way.",
+    "title": "Boxing Tutorial",
+    "intro1": "Welcome! This tutorial will teach you the basics of boxing and how to use Sparx.",
+    "stanceTitle": "Boxing Stance",
+    "stanceText": "Stand with your feet shoulder-width apart, knees slightly bent, and hands up to protect your face.",
     "jabTitle": "Jab",
-    "jabText": "Throw your left and twist your left foot. The goal is to punch with your whole body, not just your arm.",
+    "jabText": "The jab is a quick, straight punch with your lead hand. Extend your arm and snap it back.",
     "crossTitle": "Cross",
-    "crossText": "Throw your right hand straight, pivot your right foot and rotate your hips for power.",
+    "crossText": "The cross is a powerful straight punch with your rear hand. Rotate your hips and shoulders as you punch.",
     "leftHookTitle": "Left Hook",
-    "leftHookText": "Swing your left arm in a horizontal arc, pivot your left foot and rotate your hips.",
+    "leftHookText": "The left hook is a punch thrown in a semi-circular motion with your lead hand.",
     "rightHookTitle": "Right Hook",
-    "rightHookText": "Swing your right arm in a horizontal arc, pivot your right foot and rotate your hips.",
+    "rightHookText": "The right hook is a punch thrown in a semi-circular motion with your rear hand.",
     "leftUppercutTitle": "Left Uppercut",
-    "leftUppercutText": "Bend your knees, drop your left hand, then drive it upward with your legs and hips.",
+    "leftUppercutText": "The left uppercut is a punch thrown upward with your lead hand.",
     "rightUppercutTitle": "Right Uppercut",
-    "rightUppercutText": "Bend your knees, drop your right hand, then drive it upward with your legs and hips.",
-    "jabCrossTitle": "Jab-Cross",
-    "jabCrossText": "Throw a jab with your lead hand, then immediately follow with a cross from your rear hand.",
+    "rightUppercutText": "The right uppercut is a punch thrown upward with your rear hand.",
+    "jabCrossTitle": "Jab + Cross Combo",
+    "jabCrossText": "Combine the jab and cross for a quick one-two combination.",
     "soundsTitle": "Boxing Sounds",
-    "soundsText": "Now let's listen to the different sounds in boxing.",
+    "soundsText": "Sparx uses sounds to help you keep rhythm and know when to punch.",
     "tripleTapTitle": "Triple Tap",
-    "tripleTapText": "This is a triple tap, it announces that you have 10 seconds before ending a round or before starting a round.",
+    "tripleTapText": "A triple tap sound means it's time to start punching!",
     "tripleBellTitle": "Triple Bell",
-    "tripleBellText": "This is a triple bell, it announces the end of a round.",
-    "endTitle": "Tutorial Complete!",
-    "endText": "You completed the tutorial. Practice and have fun!"
+    "tripleBellText": "A triple bell sound signals the end of a round.",
+    "endTitle": "You're Ready!",
+    "endText": "That's it! You're ready to start training with Sparx. Good luck!"
   }
 }

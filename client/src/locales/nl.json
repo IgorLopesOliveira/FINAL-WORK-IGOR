@@ -1,103 +1,121 @@
 {
-  "welcome": "WELKOM",
-  "toSparx": "bij SPARX",
+  "welcome": "Welkom",
+  "toSparx": "bij Sparx",
   "selectLanguage": "Selecteer taal",
-  "selectAge": "Selecteer leeftijd",
   "chooseLanguage": "Kies een taal",
+  "selectAge": "Selecteer leeftijd",
   "chooseAge": "Kies een leeftijd",
   "confirm": "Bevestigen",
   "tutorial": "Tutorial",
   "skip": "Overslaan",
+
   "home": {
     "menu": "Menu",
     "freeFight": "Vrij gevecht",
     "miniGames": "Minigames",
-    "tutorial": "Tutorial",
-    "userProfile": "Gebruikersprofiel",
-    "settings": "Instellingen"
+    "tutorial": "Tutorial"
   },
+
+  "minimenu": {
+    "menuTitle": "Minigames",
+    "memorize": "Onthouden",
+    "accuracy": "Nauwkeurigheid"
+  },
+
+  "fight": {
+    "roundTime": "Ronde tijd",
+    "minutes": "min",
+    "rounds": "Rondes",
+    "round": "Ronde",
+    "rest": "Rust (min)",
+    "restBetween": "Rust tussen rondes",
+    "nextRound": "De volgende ronde begint binnenkort...",
+    "start": "Start",
+    "pause": "Pauze",
+    "stop": "Stop",
+    "switch": "Wissel",
+    "hide": "Verbergen"
+  },
+
+  "memorize": {
+    "memorizeTitle": "Onthoud de combinatie",
+    "jabToStart": "Doe je handschoenen aan en geef een jab om te starten",
+    "throwJab": "Geef een jab om te starten!",
+    "infoTitle": "Hoe het spel werkt",
+    "infoText": "Er verschijnt een stootsoort op het scherm; je moet de juiste stoot uitvoeren. Als je het goed doet, wordt er een stoot toegevoegd aan de vorige; het is snel, dus je moet gefocust blijven. Naarmate je de combinaties goed uitvoert, worden er meer stoten toegevoegd totdat je een combinatie van 10 stoten hebt bereikt.",
+    "understood": "Begrijp ik",
+    "yourTurn": "Jouw beurt!",
+    "wrongPunch": "Verkeerde stoot!",
+    "tryAgain": "Probeer opnieuw",
+    "completed": "Je hebt alle 10 stoten voltooid!",
+    "playAgain": "Opnieuw spelen"
+  },
+
+  "accuracy": {
+    "title": "Nauwkeurigheidsspel",
+    "jabToStart": "Doe je handschoenen aan en geef een jab om te starten",
+    "infoTitle": "Hoe het spel werkt",
+    "infoText": "Je ziet een stootsoort op het scherm. Je moet de juiste stoot zo snel mogelijk uitvoeren voordat de tijd om is. Elke keer dat je het goed doet, wordt de reactietijd korter. Voer 10 stoten achter elkaar uit om te winnen!",
+    "understood": "Begrijp ik",
+    "hit": "Voer deze stoot uit!",
+    "wrongPunch": "Verkeerde stoot",
+    "backToMenu": "Terug naar het nauwkeurigheidsmenu",
+    "completed": "Je hebt alle 10 stoten voltooid!",
+    "playAgain": "Opnieuw spelen",
+    "timeLeft": "Resterende tijd"
+  },
+
+  "account": {
+    "title": "Je gevechtsscores",
+    "noScores": "Nog geen scores.",
+    "date": "Datum"
+  },
+
   "score": {
-    "results": "Resultaten van het gevecht",
+    "results": "Resultaten",
     "timeChosen": "Gekozen tijd",
     "seconds": "seconden",
     "punchesPerMinute": "Stoten per minuut",
     "punchesByType": "Stoten per type",
     "backToFight": "Terug naar gevecht"
   },
-  "fight": {
-    "roundTime": "Rondetijd",
-    "minutes": "minuten",
-    "start": "Start",
-    "pause": "Pauze",
-    "hide": "Verbergen",
-    "switch": "Wisselen",
-    "stop": "Stoppen"
-  },
-  "memorize": {
-    "memorizeTitle": "Onthoud de combinatie",
-    "start": "Start",
-    "yourTurn": "Jouw beurt",
-    "wrongPunch": "Verkeerde stoot",
-    "tryAgain": "Probeer opnieuw",
-    "completed": "Je hebt alle 10 stoten voltooid!",
-    "playAgain": "Opnieuw spelen"
-  },
-  "account": {
-    "title": "Jouw gevechtsscores",
-    "noScores": "Nog geen scores.",
-    "date": "Datum"
-  },
-  "accuracy": {
-    "title": "Nauwkeurigheidsspel",
-    "start": "Start",
-    "hit": "Raak deze stoot!",
-    "wrongPunch": "Verkeerde stoot",
-    "backToMenu": "Terug naar nauwkeurigheidsmenu",
-    "completed": "Je hebt alle 10 stoten voltooid!",
-    "playAgain": "Opnieuw spelen",
-    "timeLeft": "Resterende tijd"
-  },
-  "minimenu": {
-    "menuTitle": "Minigames",
-    "memorize": "Onthouden",
-    "accuracy": "Nauwkeurigheid"
-  },
+
   "settings": {
     "title": "Instellingen",
     "language": "Taal",
     "theme": "Thema",
     "darkMode": "Donkere modus",
     "lightMode": "Lichte modus",
-    "reset": "Voortgang resetten",
-    "confirmReset": "Weet je zeker dat je je voortgang wilt resetten?"
+    "reset": "Vooruitgang resetten",
+    "confirmReset": "Weet je zeker dat je je vooruitgang wilt resetten?"
   },
-  "tutorialP": {
-    "title": "Bokstechnieken Tutorial",
-    "intro1": "Laten we eerst de verschillende soorten stoten in het boksen doornemen.",
-    "stanceTitle": "Houding",
-    "stanceText": "Als je rechtshandig bent: linker voet voor, rechter voet achter, linkerhand is je voorste hand, rechterhand is je achterste. Bij linkshandigen is het andersom.",
-    "jabTitle": "Jab",
-    "jabText": "Gooi je linkerhand naar voren en draai je linkervoet. Het doel is om met je hele lichaam te stoten, niet alleen met je arm.",
-    "crossTitle": "Cross",
-    "crossText": "Stoot met je rechterhand recht naar voren, draai je rechtervoet en je heupen voor kracht.",
-    "leftHookTitle": "Linker Hoek",
-    "leftHookText": "Sla met je linkerarm in een horizontale boog, draai je linkervoet en je heupen mee.",
-    "rightHookTitle": "Rechter Hoek",
-    "rightHookText": "Sla met je rechterarm in een horizontale boog, draai je rechtervoet en je heupen mee.",
-    "leftUppercutTitle": "Linker Uppercut",
-    "leftUppercutText": "Buig je knieën, laat je linkerhand zakken en duw hem dan omhoog met je benen en heupen.",
-    "rightUppercutTitle": "Rechter Uppercut",
-    "rightUppercutText": "Buig je knieën, laat je rechterhand zakken en duw hem dan omhoog met je benen en heupen.",
-    "jabCrossTitle": "Jab-Cross",
-    "jabCrossText": "Geef een jab met je voorste hand en volg direct met een cross vanuit je achterste hand.",
-    "soundsTitle": "Boksgeluiden",
-    "soundsText": "Laten we nu luisteren naar de verschillende geluiden in het boksen.",
-    "tripleTapTitle": "Drievoudige Tik",
-    "tripleTapText": "Dit is een drievoudige tik. Het geeft aan dat je nog 10 seconden hebt voor het einde of begin van een ronde.",
-    "tripleBellTitle": "Drievoudige Bel",
-    "tripleBellText": "Dit is een drievoudige bel. Het geeft het einde van een ronde aan.",
-    "endTitle": "Tutorial Voltooid!",
-    "endText": "Je hebt de tutorial voltooid. Oefen en veel plezier!"
-  }
 
+  "tutorialP": {
+    "title": "Bokstutorial",
+    "intro1": "Welkom! Deze tutorial leert je de basis van boksen en hoe je Sparx gebruikt.",
+    "stanceTitle": "Bokshouding",
+    "stanceText": "Sta met je voeten op schouderbreedte, knieën licht gebogen en handen omhoog om je gezicht te beschermen.",
+    "jabTitle": "Jab",
+    "jabText": "De jab is een snelle, rechte stoot met je voorste hand. Strek je arm en haal hem snel terug.",
+    "crossTitle": "Cross",
+    "crossText": "De cross is een krachtige rechte stoot met je achterste hand. Draai je heupen en schouders terwijl je slaat.",
+    "leftHookTitle": "Linkse haak",
+    "leftHookText": "De linkse haak is een stoot in een halve cirkelbeweging met je voorste hand.",
+    "rightHookTitle": "Rechtse haak",
+    "rightHookText": "De rechtse haak is een stoot in een halve cirkelbeweging met je achterste hand.",
+    "leftUppercutTitle": "Linkse uppercut",
+    "leftUppercutText": "De linkse uppercut is een opwaartse stoot met je voorste hand.",
+    "rightUppercutTitle": "Rechtse uppercut",
+    "rightUppercutText": "De rechtse uppercut is een opwaartse stoot met je achterste hand.",
+    "jabCrossTitle": "Jab + Cross Combinatie",
+    "jabCrossText": "Combineer de jab en cross voor een snelle één-twee combinatie.",
+    "soundsTitle": "Boksgeluiden",
+    "soundsText": "Sparx gebruikt geluiden om je ritme te laten behouden en te weten wanneer je moet slaan.",
+    "tripleTapTitle": "Driedubbele tik",
+    "tripleTapText": "Een driedubbele tik betekent dat het tijd is om te beginnen met slaan!",
+    "tripleBellTitle": "Driedubbele bel",
+    "tripleBellText": "Een driedubbele bel geeft het einde van een ronde aan.",
+    "endTitle": "Je bent er klaar voor!",
+    "endText": "Dat is alles! Je bent klaar om te beginnen met trainen met Sparx. Veel succes!"
+  }
 }

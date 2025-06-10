@@ -86,7 +86,7 @@ export default function Account() {
 
   useEffect(() => {
     const storedScores = JSON.parse(localStorage.getItem("fightScores") || "[]");
-    setScores(storedScores.reverse());
+    setScores([...storedScores].reverse()); // clone before reverse
   }, []);
 
   return (

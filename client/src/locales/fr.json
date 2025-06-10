@@ -1,67 +1,85 @@
 {
-  "welcome": "BIENVENUE",
-  "toSparx": "dans SPARX",
+  "welcome": "Bienvenue",
+  "toSparx": "sur Sparx",
   "selectLanguage": "Sélectionner la langue",
+  "chooseLanguage": "Choisissez la langue",
   "selectAge": "Sélectionner l'âge",
-  "chooseLanguage": "Choisissez une langue",
-  "chooseAge": "Choisissez un âge",
+  "chooseAge": "Choisissez l'âge",
   "confirm": "Confirmer",
   "tutorial": "Tutoriel",
   "skip": "Passer",
+
   "home": {
     "menu": "Menu",
     "freeFight": "Combat libre",
     "miniGames": "Mini-jeux",
-    "tutorial": "Tutoriel",
-    "userProfile": "Profil utilisateur",
-    "settings": "Paramètres"
+    "tutorial": "Tutoriel"
   },
+
+  "minimenu": {
+    "menuTitle": "Mini-Jeux",
+    "memorize": "Mémoriser",
+    "accuracy": "Précision"
+  },
+
+  "fight": {
+    "roundTime": "Durée du round",
+    "minutes": "min",
+    "rounds": "Rounds",
+    "round": "Round",
+    "rest": "Repos (min)",
+    "restBetween": "Repos entre les rounds",
+    "nextRound": "Le prochain round commence bientôt...",
+    "start": "Démarrer",
+    "pause": "Pause",
+    "stop": "Arrêter",
+    "switch": "Changer",
+    "hide": "Masquer"
+  },
+
+  "memorize": {
+    "memorizeTitle": "Mémorisez la combinaison",
+    "jabToStart": "Enfilez vos gants et lancez un jab pour commencer",
+    "throwJab": "Lancez un jab pour commencer !",
+    "infoTitle": "Comment fonctionne le jeu",
+    "infoText": "Un type de coup apparaîtra à l’écran, vous devrez exécuter le coup correct. Si c’est juste, un coup sera ajouté au précédent ; c’est rapide, vous devez rester concentré. À mesure que vous réussirez les combinaisons, d’autres coups seront ajoutés jusqu’à atteindre une combinaison de 10 coups.",
+    "understood": "Compris",
+    "yourTurn": "À vous de jouer !",
+    "wrongPunch": "Coup incorrect !",
+    "tryAgain": "Réessayez",
+    "completed": "Vous avez complété les 10 coups !",
+    "playAgain": "Rejouer"
+  },
+
+  "accuracy": {
+    "title": "Jeu de Précision",
+    "jabToStart": "Enfilez vos gants et lancez un jab pour commencer",
+    "infoTitle": "Comment fonctionne le jeu",
+    "infoText": "Vous verrez un type de coup à l’écran. Vous devez exécuter le coup correct le plus rapidement possible avant la fin du temps. À chaque réussite, le temps de réaction diminue. Réalisez 10 coups d’affilée pour gagner !",
+    "understood": "Compris",
+    "hit": "Exécutez ce coup !",
+    "wrongPunch": "Coup incorrect",
+    "backToMenu": "Retour au menu Précision",
+    "completed": "Vous avez complété les 10 coups !",
+    "playAgain": "Rejouer",
+    "timeLeft": "Temps restant"
+  },
+
+  "account": {
+    "title": "Vos scores de combat",
+    "noScores": "Pas encore de scores.",
+    "date": "Date"
+  },
+
   "score": {
-    "results": "Résultats du combat",
-    "timeChosen": "Temps choisi",
+    "results": "Résultats",
+    "timeChosen": "Temps sélectionné",
     "seconds": "secondes",
     "punchesPerMinute": "Coups par minute",
     "punchesByType": "Coups par type",
     "backToFight": "Retour au combat"
   },
-  "fight": {
-    "roundTime": "Durée du round",
-    "minutes": "minutes",
-    "start": "Démarrer",
-    "pause": "Pause",
-    "hide": "Cacher",
-    "switch": "Changer",
-    "stop": "Arrêter"
-  },
-  "memorize": {
-    "memorizeTitle": "Mémorise la combinaison",
-    "start": "Démarrer",
-    "yourTurn": "À ton tour",
-    "wrongPunch": "Mauvais coup",
-    "tryAgain": "Réessayer",
-    "completed": "Tu as complété les 10 coups !",
-    "playAgain": "Rejouer"
-  },
-  "account": {
-    "title": "Tes scores de combat",
-    "noScores": "Aucun score pour le moment.",
-    "date": "Date"
-  },
-  "accuracy": {
-    "title": "Jeu de Précision",
-    "start": "Démarrer",
-    "hit": "Frappe ce coup !",
-    "wrongPunch": "Mauvais coup",
-    "backToMenu": "Retour au menu Précision",
-    "completed": "Tu as complété les 10 coups !",
-    "playAgain": "Rejouer",
-    "timeLeft": "Temps restant"
-  },
-  "minimenu": {
-    "menuTitle": "Mini-jeux",
-    "memorize": "Mémoriser",
-    "accuracy": "Précision"
-  },
+
   "settings": {
     "title": "Paramètres",
     "language": "Langue",
@@ -69,35 +87,35 @@
     "darkMode": "Mode sombre",
     "lightMode": "Mode clair",
     "reset": "Réinitialiser la progression",
-    "confirmReset": "Es-tu sûr de vouloir réinitialiser ta progression ?"
+    "confirmReset": "Êtes-vous sûr de vouloir réinitialiser votre progression ?"
   },
-  "tutorialP": {
-    "title": "Tutoriel des Coups de Boxe",
-    "intro1": "Commençons par passer en revue les différents types de coups en boxe.",
-    "stanceTitle": "Garde",
-    "stanceText": "Si tu es droitier, pied gauche devant, pied droit derrière, main gauche en avant et main droite en arrière. Pour les gauchers, c’est l’inverse.",
-    "jabTitle": "Jab",
-    "jabText": "Lance ton poing gauche et pivote ton pied gauche. Le but est de frapper avec tout ton corps, pas seulement ton bras.",
-    "crossTitle": "Cross",
-    "crossText": "Lance ton poing droit bien droit, pivote ton pied droit et fais tourner tes hanches pour plus de puissance.",
-    "leftHookTitle": "Crochet Gauche",
-    "leftHookText": "Fais un arc horizontal avec ton bras gauche, pivote ton pied gauche et fais tourner tes hanches.",
-    "rightHookTitle": "Crochet Droit",
-    "rightHookText": "Fais un arc horizontal avec ton bras droit, pivote ton pied droit et fais tourner tes hanches.",
-    "leftUppercutTitle": "Uppercut Gauche",
-    "leftUppercutText": "Plie les genoux, abaisse la main gauche, puis pousse-la vers le haut avec les jambes et les hanches.",
-    "rightUppercutTitle": "Uppercut Droit",
-    "rightUppercutText": "Plie les genoux, abaisse la main droite, puis pousse-la vers le haut avec les jambes et les hanches.",
-    "jabCrossTitle": "Jab-Cross",
-    "jabCrossText": "Lance un jab avec ta main avant, puis enchaîne immédiatement avec un cross de la main arrière.",
-    "soundsTitle": "Sons de Boxe",
-    "soundsText": "Écoutons maintenant les différents sons utilisés en boxe.",
-    "tripleTapTitle": "Triple Tapotement",
-    "tripleTapText": "Ceci est un triple tapotement, il annonce qu'il reste 10 secondes avant la fin ou le début d'un round.",
-    "tripleBellTitle": "Triple Grelot",
-    "tripleBellText": "Ceci est un triple grelot, il annonce la fin d'un round.",
-    "endTitle": "Tutoriel Terminé !",
-    "endText": "Tu as terminé le tutoriel. Entraîne-toi et amuse-toi !"
-  }
 
+  "tutorialP": {
+    "title": "Tutoriel de boxe",
+    "intro1": "Bienvenue ! Ce tutoriel vous apprendra les bases de la boxe et comment utiliser Sparx.",
+    "stanceTitle": "Garde de boxe",
+    "stanceText": "Placez-vous pieds écartés à la largeur des épaules, genoux légèrement fléchis et mains levées pour protéger votre visage.",
+    "jabTitle": "Jab",
+    "jabText": "Le jab est un coup rapide et direct avec la main avant. Tendez le bras et ramenez-le rapidement.",
+    "crossTitle": "Cross",
+    "crossText": "Le cross est un coup direct puissant avec la main arrière. Tournez les hanches et les épaules en frappant.",
+    "leftHookTitle": "Crochet gauche",
+    "leftHookText": "Le crochet gauche est un coup lancé en mouvement semi-circulaire avec la main avant.",
+    "rightHookTitle": "Crochet droit",
+    "rightHookText": "Le crochet droit est un coup lancé en mouvement semi-circulaire avec la main arrière.",
+    "leftUppercutTitle": "Uppercut gauche",
+    "leftUppercutText": "L’uppercut gauche est un coup lancé vers le haut avec la main avant.",
+    "rightUppercutTitle": "Uppercut droit",
+    "rightUppercutText": "L’uppercut droit est un coup lancé vers le haut avec la main arrière.",
+    "jabCrossTitle": "Combo Jab + Cross",
+    "jabCrossText": "Combinez le jab et le cross pour un enchaînement rapide un-deux.",
+    "soundsTitle": "Sons de boxe",
+    "soundsText": "Sparx utilise des sons pour vous aider à garder le rythme et savoir quand frapper.",
+    "tripleTapTitle": "Triple tap",
+    "tripleTapText": "Un son de triple tap signifie qu’il est temps de commencer à frapper.",
+    "tripleBellTitle": "Triple cloche",
+    "tripleBellText": "Un son de triple cloche signale la fin d’un round.",
+    "endTitle": "Vous êtes prêt !",
+    "endText": "C’est tout ! Vous êtes prêt à commencer l’entraînement avec Sparx. Bonne chance !"
+  }
 }

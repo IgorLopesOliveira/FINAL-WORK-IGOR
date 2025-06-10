@@ -1,103 +1,121 @@
 {
-  "welcome": "BIENVENIDO",
-  "toSparx": "a SPARX",
+  "welcome": "Bienvenido",
+  "toSparx": "a Sparx",
   "selectLanguage": "Seleccionar idioma",
-  "selectAge": "Seleccionar edad",
   "chooseLanguage": "Elige un idioma",
+  "selectAge": "Seleccionar edad",
   "chooseAge": "Elige una edad",
   "confirm": "Confirmar",
   "tutorial": "Tutorial",
-  "skip": "Saltar",
+  "skip": "Omitir",
+
   "home": {
     "menu": "Menú",
-    "freeFight": "Pelea libre",
+    "freeFight": "Combate libre",
     "miniGames": "Minijuegos",
-    "tutorial": "Tutorial",
-    "userProfile": "Perfil de usuario",
-    "settings": "Configuración"
+    "tutorial": "Tutorial"
   },
+
+  "minimenu": {
+    "menuTitle": "Minijuegos",
+    "memorize": "Memorizar",
+    "accuracy": "Precisión"
+  },
+
+  "fight": {
+    "roundTime": "Tiempo de asalto",
+    "minutes": "min",
+    "rounds": "Asaltos",
+    "round": "Asalto",
+    "rest": "Descanso (min)",
+    "restBetween": "Descanso entre asaltos",
+    "nextRound": "El siguiente asalto comienza pronto...",
+    "start": "Iniciar",
+    "pause": "Pausar",
+    "stop": "Detener",
+    "switch": "Cambiar",
+    "hide": "Ocultar"
+  },
+
+  "memorize": {
+    "memorizeTitle": "Memoriza la combinación",
+    "jabToStart": "Ponte los guantes y lanza un jab para empezar",
+    "throwJab": "¡Lanza un jab para empezar!",
+    "infoTitle": "Cómo funciona el juego",
+    "infoText": "En la pantalla aparecerá un tipo de golpe y tendrás que ejecutar el golpe correcto. Si aciertas, se añadirá un golpe al anterior; es rápido, así que debes estar concentrado. A medida que aciertes las combinaciones, se irán añadiendo más golpes hasta alcanzar una combinación de 10 golpes.",
+    "understood": "Entendido",
+    "yourTurn": "¡Tu turno!",
+    "wrongPunch": "¡Golpe incorrecto!",
+    "tryAgain": "Inténtalo de nuevo",
+    "completed": "¡Completaste los 10 golpes!",
+    "playAgain": "Jugar de nuevo"
+  },
+
+  "accuracy": {
+    "title": "Juego de Precisión",
+    "jabToStart": "Ponte los guantes y lanza un jab para empezar",
+    "infoTitle": "Cómo funciona el juego",
+    "infoText": "Verás un tipo de golpe en la pantalla. Debes ejecutar el golpe correcto lo más rápido posible antes de que se acabe el tiempo. Cada vez que aciertes, el tiempo de reacción se reducirá. ¡Completa 10 golpes seguidos para ganar!",
+    "understood": "Entendido",
+    "hit": "¡Da este golpe!",
+    "wrongPunch": "Golpe incorrecto",
+    "backToMenu": "Volver al menú de Precisión",
+    "completed": "¡Completaste los 10 golpes!",
+    "playAgain": "Jugar de nuevo",
+    "timeLeft": "Tiempo restante"
+  },
+
+  "account": {
+    "title": "Tus puntuaciones de combate",
+    "noScores": "Aún no hay puntuaciones.",
+    "date": "Fecha"
+  },
+
   "score": {
-    "results": "Resultados de la pelea",
+    "results": "Resultados",
     "timeChosen": "Tiempo seleccionado",
     "seconds": "segundos",
     "punchesPerMinute": "Golpes por minuto",
     "punchesByType": "Golpes por tipo",
-    "backToFight": "Volver a la pelea"
+    "backToFight": "Volver al combate"
   },
-  "fight": {
-    "roundTime": "Tiempo de ronda",
-    "minutes": "minutos",
-    "start": "Comenzar",
-    "pause": "Pausar",
-    "hide": "Ocultar",
-    "switch": "Cambiar",
-    "stop": "Detener"
-  },
-  "memorize": {
-    "memorizeTitle": "Memoriza la combinación",
-    "start": "Comenzar",
-    "yourTurn": "Tu turno",
-    "wrongPunch": "Golpe incorrecto",
-    "tryAgain": "Intenta de nuevo",
-    "completed": "¡Has completado los 10 golpes!",
-    "playAgain": "Jugar de nuevo"
-  },
-  "account": {
-    "title": "Tus puntuaciones de pelea",
-    "noScores": "Aún no hay puntuaciones.",
-    "date": "Fecha"
-  },
-  "accuracy": {
-    "title": "Juego de Precisión",
-    "start": "Comenzar",
-    "hit": "¡Da este golpe!",
-    "wrongPunch": "Golpe incorrecto",
-    "backToMenu": "Volver al menú de precisión",
-    "completed": "¡Has completado los 10 golpes!",
-    "playAgain": "Jugar de nuevo",
-    "timeLeft": "Tiempo restante"
-  },
-  "minimenu": {
-    "menuTitle": "Minijuegos",
-    "memorize": "Memoriza",
-    "accuracy": "Precisión"
-  },
+
   "settings": {
     "title": "Configuración",
     "language": "Idioma",
     "theme": "Tema",
     "darkMode": "Modo oscuro",
     "lightMode": "Modo claro",
-    "reset": "Reiniciar progreso",
-    "confirmReset": "¿Estás seguro de que deseas reiniciar tu progreso?"
+    "reset": "Restablecer progreso",
+    "confirmReset": "¿Estás seguro de que quieres restablecer tu progreso?"
   },
-  "tutorialP": {
-    "title": "Tutorial de Golpes de Boxeo",
-    "intro1": "Primero, repasemos los diferentes tipos de golpes en el boxeo.",
-    "stanceTitle": "Postura",
-    "stanceText": "Si eres diestro, pie izquierdo al frente y pie derecho atrás, la mano izquierda es la principal y la derecha la trasera. Si eres zurdo, al revés.",
-    "jabTitle": "Jab",
-    "jabText": "Lanza tu mano izquierda y gira el pie izquierdo. El objetivo es golpear con todo el cuerpo, no solo con el brazo.",
-    "crossTitle": "Cross",
-    "crossText": "Lanza tu mano derecha recta, gira el pie derecho y rota las caderas para obtener potencia.",
-    "leftHookTitle": "Hook Izquierdo",
-    "leftHookText": "Lanza tu brazo izquierdo en un arco horizontal, gira el pie izquierdo y rota las caderas.",
-    "rightHookTitle": "Hook Derecho",
-    "rightHookText": "Lanza tu brazo derecho en un arco horizontal, gira el pie derecho y rota las caderas.",
-    "leftUppercutTitle": "Uppercut Izquierdo",
-    "leftUppercutText": "Flexiona las rodillas, baja la mano izquierda y luego lánzala hacia arriba con las piernas y las caderas.",
-    "rightUppercutTitle": "Uppercut Derecho",
-    "rightUppercutText": "Flexiona las rodillas, baja la mano derecha y luego lánzala hacia arriba con las piernas y las caderas.",
-    "jabCrossTitle": "Jab-Cross",
-    "jabCrossText": "Lanza un jab con tu mano principal y sigue inmediatamente con un cross con tu mano trasera.",
-    "soundsTitle": "Sonidos del Boxeo",
-    "soundsText": "Ahora escuchemos los diferentes sonidos en el boxeo.",
-    "tripleTapTitle": "Triple Golpe",
-    "tripleTapText": "Esto es un triple golpe, anuncia que quedan 10 segundos antes de terminar o comenzar un round.",
-    "tripleBellTitle": "Triple Campana",
-    "tripleBellText": "Esto es una triple campana, anuncia el final de un round.",
-    "endTitle": "¡Tutorial Completado!",
-    "endText": "Has completado el tutorial. ¡Practica y diviértete!"
-  }
 
+  "tutorialP": {
+    "title": "Tutorial de boxeo",
+    "intro1": "¡Bienvenido! Este tutorial te enseñará lo básico del boxeo y cómo usar Sparx.",
+    "stanceTitle": "Posición de boxeo",
+    "stanceText": "Colócate con los pies a la altura de los hombros, rodillas ligeramente flexionadas y manos en alto para proteger tu rostro.",
+    "jabTitle": "Jab",
+    "jabText": "El jab es un golpe rápido y directo con la mano delantera. Extiende el brazo y recógelo con rapidez.",
+    "crossTitle": "Cross",
+    "crossText": "El cross es un golpe recto y potente con la mano trasera. Gira caderas y hombros al golpear.",
+    "leftHookTitle": "Gancho izquierdo",
+    "leftHookText": "El gancho izquierdo es un golpe semicircular con la mano delantera.",
+    "rightHookTitle": "Gancho derecho",
+    "rightHookText": "El gancho derecho es un golpe semicircular con la mano trasera.",
+    "leftUppercutTitle": "Uppercut izquierdo",
+    "leftUppercutText": "El uppercut izquierdo es un golpe ascendente con la mano delantera.",
+    "rightUppercutTitle": "Uppercut derecho",
+    "rightUppercutText": "El uppercut derecho es un golpe ascendente con la mano trasera.",
+    "jabCrossTitle": "Combo Jab + Cross",
+    "jabCrossText": "Combina el jab y el cross para una rápida combinación uno-dos.",
+    "soundsTitle": "Sonidos de boxeo",
+    "soundsText": "Sparx utiliza sonidos para ayudarte a mantener el ritmo y saber cuándo golpear.",
+    "tripleTapTitle": "Triple tap",
+    "tripleTapText": "Un sonido de triple tap significa que es hora de empezar a golpear.",
+    "tripleBellTitle": "Triple campana",
+    "tripleBellText": "Un sonido de triple campana señala el final de un asalto.",
+    "endTitle": "¡Estás listo!",
+    "endText": "¡Eso es todo! Estás listo para empezar a entrenar con Sparx. ¡Buena suerte!"
+  }
 }

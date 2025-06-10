@@ -152,6 +152,19 @@ function Accuracy() {
   const [showInfo, setShowInfo] = useState(true);
   const timeoutRef = useRef(null);
 
+  // Listen for jab to start the game (only in menu phase)
+  useEffect(() => {
+    if (!socket || phase !== "menu") return;
+    const handlePunch = (data) => {
+      const punch = (data.type || "").toLowerCase().trim();
+      if (punch === "jab" || punch === "cross") {
+        startGame();
+      }
+    };
+    socket.on("punch", handlePunch);
+    return () => socket.off("punch", handlePunch);
+  }, [socket, phase]);
+
   // Start the game
   const startGame = () => {
     setCurrentIndex(0);
@@ -265,7 +278,9 @@ function Accuracy() {
         <h1 style={styles.title}>{t("accuracy.title", "Accuracy Game")}</h1>
         <div />
       </div>
-      <button style={styles.button} onClick={startGame}>{t("accuracy.start", "Start")}</button>
+      <div style={{ marginTop: "2rem", fontSize: "1.3rem", fontWeight: 700 }}>
+        {t("accuracy.jabToStart", "Put your gloves on and throw a jab to start")}
+      </div>
     </div>
   );
 

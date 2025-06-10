@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
-const punches = ["Jab", "Left hook","Right hook", "Left Uppercut", "Right Uppercut", "Cross"];
+const punches = ["Jab", "Left hook", "Right hook", "Left Uppercut", "Right Uppercut", "Cross"];
 
 const styles = {
   container: {
@@ -152,6 +152,20 @@ function Memorize() {
   const punchCooldown = 1000;
   const lastPunchTimeRef = useRef(0);
 
+  // Listen for jab to start the game (only in menu phase)
+  useEffect(() => {
+    if (!socket || phase !== "menu") return;
+    const handlePunch = (data) => {
+      const punch = (data.type || "").toLowerCase().trim();
+      if (punch === "jab" || punch === "cross") {
+        startGame();
+      }
+    };
+    socket.on("punch", handlePunch);
+    return () => socket.off("punch", handlePunch);
+  }, [socket, phase]);
+
+  // Listen for punches during input phase
   useEffect(() => {
     if (!socket || phase !== "input") return;
     const handlePunch = (data) => {
@@ -194,7 +208,7 @@ function Memorize() {
   useEffect(() => {
     if (phase === "input" && currentIndex === combo.length && combo.length > 0) {
       setTimeout(() => {
-        if (combo.length === 2) {
+        if (combo.length === 10) {
           setPhase("win");
         } else {
           setTimeout(() => {
@@ -323,7 +337,9 @@ function Memorize() {
         <h1 style={styles.title}>{t("memorize.memorizeTitle")}</h1>
         <div />
       </div>
-      <button style={styles.button} onClick={startGame}>{t("memorize.start")}</button>
+      <div style={{ marginTop: "2rem", fontSize: "1.3rem", fontWeight: 700 }}>
+        {t("memorize.jabToStart", "Put your gloves on and throw a jab to start")}
+      </div>
     </div>
   );
 
