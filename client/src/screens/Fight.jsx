@@ -132,6 +132,15 @@ function Fight() {
   const tripleTapRef = useRef(null);
   const tripleBellRef = useRef(null);
 
+  // For deduplication: store last punch time for each logical type
+  const lastPunchTimeRef = useRef({
+    straights: 0,
+    hook: 0,
+    uppercut: 0,
+  });
+
+  const PUNCH_COOLDOWN = 400; // ms
+
   const resetFight = () => {
     setFightState("config");
     setTimeLeft(0);
@@ -144,28 +153,33 @@ function Fight() {
 
   useEffect(() => {
     if (!socket) return;
-    let lastFrontPunchTime = 0;
-    let lastUppercutTime = 0;
-    const FRONT_PUNCHES = ["jab", "cross"];
-    const UPPERCUT_PUNCHES = ["left uppercut", "right uppercut"];
-    const FRONT_PUNCH_COOLDOWN = 400;
-    const UPPERCUT_PUNCH_COOLDOWN = 400;
 
     const punchHandler = (data) => {
       if (!data?.type) return;
       const punchType = data.type.toLowerCase();
-      const now = Date.now();
 
-      if (FRONT_PUNCHES.includes(punchType)) {
-        if (now - lastFrontPunchTime < FRONT_PUNCH_COOLDOWN) return;
-        lastFrontPunchTime = now;
-      } else if (UPPERCUT_PUNCHES.includes(punchType)) {
-        if (now - lastUppercutTime < UPPERCUT_PUNCH_COOLDOWN) return;
-        lastUppercutTime = now;
+      // Map all straights (jab/cross) to "straights", all uppercuts to "uppercut", hooks to "hook"
+      let logicalType = "";
+      if (punchType === "jab" || punchType === "cross") {
+        logicalType = "straights";
+      } else if (punchType === "left uppercut" || punchType === "right uppercut") {
+        logicalType = "uppercut";
+      } else if (punchType === "left hook" || punchType === "right hook") {
+        logicalType = "hook";
+      } else {
+        return; // ignore unknown types
       }
 
+      // Deduplicate: only count if enough time has passed since last of this logical type
+      const now = Date.now();
+      if (now - lastPunchTimeRef.current[logicalType] < PUNCH_COOLDOWN) return;
+      lastPunchTimeRef.current[logicalType] = now;
+
       setPunchCount(c => c + 1);
-      setPunchesByType(prev => ({ ...prev, [punchType]: (prev[punchType] || 0) + 1 }));
+      setPunchesByType(prev => ({
+        ...prev,
+        [logicalType]: (prev[logicalType] || 0) + 1
+      }));
     };
 
     socket.on("punch", punchHandler);
@@ -235,6 +249,7 @@ function Fight() {
     setCurrentRound(1);
     setFightState("countdown");
     setTimeLeft(10);
+    lastPunchTimeRef.current = { straights: 0, hook: 0, uppercut: 0 }; // reset deduplication
   };
 
   const formatTime = s => {
