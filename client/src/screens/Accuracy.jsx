@@ -3,10 +3,30 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
-const punches = ["Jab", "Left hook", "Uppercut"];
+// Game asks for these:
+const punches = [
+  "Jab",
+  "Cross",
+  "Left hook",
+  "Right hook",
+  "Left uppercut",
+  "Right uppercut",
+];
+
 const INITIAL_TIME = 2000; // ms
 const TIME_DECREMENT = 200; // ms
 
+// Mapping: which sensor events are valid for each game punch
+const punchGroups = {
+  "jab": ["jab", "cross"],                           // straight sensor
+  "cross": ["jab", "cross"],                         // straight sensor
+  "left uppercut": ["left uppercut", "right uppercut"],   // uppercut sensor
+  "right uppercut": ["left uppercut", "right uppercut"],  // uppercut sensor
+  "left hook": ["left hook"],                        // left hook sensor
+  "right hook": ["right hook"],                      // right hook sensor
+};
+
+// Styles
 const styles = {
   container: {
     width: '100vw',
@@ -43,10 +63,6 @@ const styles = {
     justifyContent: 'center',
     fontSize: '20px',
     cursor: 'pointer',
-  },
-  iconSymbol: {
-    fontSize: '20px',
-    lineHeight: '1',
   },
   title: {
     fontSize: '2rem',
@@ -139,6 +155,11 @@ const styles = {
   },
 };
 
+// Utility to normalize everything to lowercase + spaces
+function normalize(str) {
+  return str.toLowerCase().replace(/_/g, " ").trim();
+}
+
 function Accuracy() {
   const socket = useSocket();
   const navigate = useNavigate();
@@ -152,76 +173,68 @@ function Accuracy() {
   const [showInfo, setShowInfo] = useState(true);
   const timeoutRef = useRef(null);
 
-  // Listen for jab to start the game (only in menu phase)
-  useEffect(() => {
-    if (!socket || phase !== "menu") return;
-    const handlePunch = (data) => {
-      const punch = (data.type || "").toLowerCase().trim();
+  // Generic punch handler
+  const handlePunch = (data) => {
+    const punch = normalize(data.type || "");
+    if (phase === "menu") {
       if (punch === "jab" || punch === "cross") {
         startGame();
       }
-    };
-    socket.on("punch", handlePunch);
-    return () => socket.off("punch", handlePunch);
-  }, [socket, phase]);
+      return;
+    }
 
-  // Start the game
+    if (phase !== "input") return;
+
+    const expected = normalize(currentPunch);
+    const validGroup = punchGroups[expected] || [];
+
+    clearTimeout(timeoutRef.current);
+
+    if (validGroup.includes(punch)) {
+      if (currentIndex === 9) {
+        setPhase("win");
+      } else {
+        setCurrentIndex(idx => idx + 1);
+        setTimer(t => Math.max(200, t - TIME_DECREMENT));
+        setPhase("show");
+      }
+    } else {
+      setFeedback(data.type);
+      setPhase("fail");
+    }
+  };
+
+  // Attach socket listener
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("punch", handlePunch);
+    return () => {
+      socket.off("punch", handlePunch);
+      clearTimeout(timeoutRef.current);
+    };
+  }, [socket, phase, currentPunch, currentIndex, timer]);
+
   const startGame = () => {
     setCurrentIndex(0);
     setTimer(INITIAL_TIME);
     setPhase("show");
     setFeedback("");
+    setShowInfo(false);
   };
 
-  // Show the punch to hit
+  // Show next punch
   useEffect(() => {
-    if (phase === "show") {
-      const punch = punches[Math.floor(Math.random() * punches.length)];
-      setCurrentPunch(punch);
-      setPhase("input");
-    }
-    // eslint-disable-next-line
-  }, [phase]);
+    if (phase !== "show") return;
+    const next = punches[Math.floor(Math.random() * punches.length)];
+    setCurrentPunch(next);
+    setPhase("input");
 
-  // Handle punch input and timer
-  useEffect(() => {
-    if (phase !== "input") return;
-
-    // Set up timer for this punch
     timeoutRef.current = setTimeout(() => {
       setPhase("fail");
       setFeedback("");
     }, timer);
+  }, [phase]);
 
-    // Listen for punch
-    const handlePunch = (data) => {
-      const punch = (data.type || "").toLowerCase().trim();
-      const expected = (currentPunch || "").toLowerCase().trim();
-      if (punch === expected) {
-        clearTimeout(timeoutRef.current);
-        if (currentIndex === 9) {
-          setPhase("win");
-        } else {
-          setCurrentIndex((idx) => idx + 1);
-          setTimer((t) => Math.max(200, t - TIME_DECREMENT));
-          setPhase("show");
-        }
-      } else {
-        clearTimeout(timeoutRef.current);
-        setFeedback(data.type);
-        setPhase("fail");
-      }
-    };
-
-    socket.on("punch", handlePunch);
-    return () => {
-      clearTimeout(timeoutRef.current);
-      socket.off("punch", handlePunch);
-    };
-    // eslint-disable-next-line
-  }, [phase, timer, currentPunch, currentIndex, socket]);
-
-  // Reset to menu
   const resetGame = () => {
     setPhase("menu");
     setCurrentIndex(0);
@@ -229,28 +242,60 @@ function Accuracy() {
     setFeedback("");
     setCurrentPunch("");
     setShowInfo(true);
+    clearTimeout(timeoutRef.current);
   };
 
-  // Info popup before the game
-  const renderInfoPopup = () => (
-    <div style={styles.popupOverlay}>
-      <div style={styles.popup}>
-        <div style={styles.popupTitle}>{t("accuracy.infoTitle", "How the game works")}</div>
-        <div style={styles.popupText}>
-          {t(
-            "accuracy.infoText",
-            "You will see a punch type on the screen. You must hit the correct punch as quickly as possible before the timer runs out. Each time you get it right, the time to react gets shorter. Complete 10 punches in a row to win!"
-          )}
+  // -- Render --
+  if (showInfo) {
+    return (
+      <div style={styles.popupOverlay}>
+        <div style={styles.popup}>
+          <div style={styles.popupTitle}>
+            {t("accuracy.infoTitle", "How the game works")}
+          </div>
+          <div style={styles.popupText}>
+            {t(
+              "accuracy.infoText",
+              "You will see a punch type on the screen. You must hit the correct punch as quickly as possible before the timer runs out. Each time you get it right, the time to react gets shorter. Complete 10 punches in a row to win!"
+            )}
+          </div>
+          <button
+            style={styles.popupButton}
+            onClick={() => setShowInfo(false)}
+          >
+            {t("accuracy.understood", "Understood")}
+          </button>
         </div>
-        <button style={styles.popupButton} onClick={() => setShowInfo(false)}>
-          {t("accuracy.understood", "Understood")}
-        </button>
       </div>
+    );
+  }
+
+  return (
+    <div style={styles.container}>
+      {phase === "menu" && (
+        <MenuScreen navigate={navigate} t={t} />
+      )}
+      {phase === "input" && (
+        <InputScreen
+          currentPunch={currentPunch}
+          currentIndex={currentIndex}
+          timer={timer}
+          t={t}
+          styles={styles}
+        />
+      )}
+      {phase === "fail" && (
+        <FailScreen resetGame={resetGame} t={t} styles={styles} />
+      )}
+      {phase === "win" && (
+        <WinScreen resetGame={resetGame} t={t} styles={styles} />
+      )}
     </div>
   );
+}
 
-  // Render functions
-  const renderMenu = () => (
+function MenuScreen({ navigate, t }) {
+  return (
     <div style={styles.centered}>
       <button
         style={{
@@ -263,28 +308,22 @@ function Accuracy() {
           fontSize: "2rem",
           cursor: "pointer",
           zIndex: 2,
-          padding: 0,
-          width: "auto",
-          height: "auto",
-          boxShadow: "none",
         }}
         onClick={() => navigate("/minimenu")}
         aria-label="Back"
       >
-        <span style={{ fontSize: "2rem", lineHeight: 1 }}>↩</span>
+        ↩
       </button>
-      <div style={styles.header}>
-        <div />
-        <h1 style={styles.title}>{t("accuracy.title", "Accuracy Game")}</h1>
-        <div />
-      </div>
+      <h1 style={styles.title}>{t("accuracy.title", "Accuracy Game")}</h1>
       <div style={{ marginTop: "2rem", fontSize: "1.3rem", fontWeight: 700 }}>
         {t("accuracy.jabToStart", "Put your gloves on and throw a jab to start")}
       </div>
     </div>
   );
+}
 
-  const renderInput = () => (
+function InputScreen({ currentPunch, currentIndex, timer, t, styles }) {
+  return (
     <div style={styles.centered}>
       <h2 style={styles.title}>{t("accuracy.hit", "Hit this punch!")}</h2>
       <div style={styles.bigText}>{currentPunch}</div>
@@ -296,28 +335,32 @@ function Accuracy() {
       </div>
     </div>
   );
+}
 
-  const renderFail = () => (
+function FailScreen({ resetGame, t, styles }) {
+  return (
     <div style={styles.centered}>
-      <h2 style={{ ...styles.title, ...styles.fail }}>{t("accuracy.wrongPunch", "Wrong Punch")}</h2>
-      <button style={styles.button} onClick={resetGame}>{t("accuracy.backToMenu", "Back to Accuracy Menu")}</button>
+      <h2 style={{ ...styles.title, ...styles.fail }}>
+        {t("accuracy.wrongPunch", "Wrong Punch")}
+      </h2>
+      <button style={styles.button} onClick={resetGame}>
+        {t("accuracy.backToMenu", "Back to Accuracy Menu")}
+      </button>
     </div>
   );
+}
 
-  const renderWin = () => (
+function WinScreen({ resetGame, t, styles }) {
+  return (
     <div style={styles.centered}>
-      <h1 style={styles.title}>{t("accuracy.completed", "You completed all 10 punches!")}</h1>
-      <button style={styles.button} onClick={resetGame}>{t("accuracy.playAgain", "Play Again")}</button>
+      <h1 style={styles.title}>
+        {t("accuracy.completed", "You completed all 10 punches!")}
+      </h1>
+      <button style={styles.button} onClick={resetGame}>
+        {t("accuracy.playAgain", "Play Again")}
+      </button>
     </div>
   );
-
-  if (showInfo) return <div style={styles.container}>{renderInfoPopup()}</div>;
-  if (phase === "menu") return <div style={styles.container}>{renderMenu()}</div>;
-  if (phase === "input") return <div style={styles.container}>{renderInput()}</div>;
-  if (phase === "fail") return <div style={styles.container}>{renderFail()}</div>;
-  if (phase === "win") return <div style={styles.container}>{renderWin()}</div>;
-
-  return null;
 }
 
 export default Accuracy;

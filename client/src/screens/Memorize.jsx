@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
-const punches = ["Jab", "Left hook", "Right hook", "Left Uppercut", "Right Uppercut", "Cross"];
+const punches = ["Jab", "Left hook", "Left Uppercut", "Right Uppercut", "Cross"];
 
 const styles = {
   container: {
