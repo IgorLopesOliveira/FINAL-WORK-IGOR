@@ -1,23 +1,13 @@
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Settings() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
   // Change language handler
   const handleLanguageChange = (e) => {
     i18n.changeLanguage(e.target.value);
-  };
-
-  // Theme toggle handler
-  const handleThemeToggle = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.body.setAttribute("data-theme", newTheme);
-    localStorage.setItem("theme", newTheme);
   };
 
   // Reset progress handler
@@ -41,12 +31,6 @@ export default function Settings() {
           <option value="nl">Nederlands</option>
           {/* Add more languages as needed */}
         </select>
-      </div>
-      <div className="settings-group">
-        <label>{t("settings.theme", "Theme")}</label>
-        <button onClick={handleThemeToggle}>
-          {theme === "light" ? t("settings.darkMode", "Dark Mode") : t("settings.lightMode", "Light Mode")}
-        </button>
       </div>
       <div className="settings-group">
         <button className="reset-btn" onClick={handleReset}>

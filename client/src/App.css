@@ -1,17 +1,3 @@
-/* Lock interface to 393x852 container */
-:root {
-  --bg: #EFEFEF;
-  --text: #2C2C2C;
-  --primary: #2C2C2C;
-  --secondary: #EFEFEF;
-}
-
-[data-theme="dark"] {
-  --bg: #232323;
-  --text: #EFEFEF;
-  --primary: #EFEFEF;
-  --secondary: #2C2C2C;
-}
 
 body {
   margin: 0;
@@ -21,8 +7,8 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: var(--bg);
-  color: var(--text);
+  background: #EFEFEF;
+  color: #2C2C2C;
 }
 
 #root {
