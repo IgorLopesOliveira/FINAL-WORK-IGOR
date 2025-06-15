@@ -6,12 +6,18 @@ function Welcome() {
   const [stage, setStage] = useState(1);
   const containerRef = useRef(null);
 
+  // Show welcome first, then disclaimer, then language/age
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setStage(2);
-    }, 4000);
-    return () => clearTimeout(timeout);
+    const timeout1 = setTimeout(() => setStage(2), 5000); // Welcome
+    return () => clearTimeout(timeout1);
   }, []);
+
+  useEffect(() => {
+    if (stage === 2) {
+      const timeout2 = setTimeout(() => setStage(3), 5000); // Disclaimer
+      return () => clearTimeout(timeout2);
+    }
+  }, [stage]);
 
   const handleConfirm = () => {
     const language = document.getElementById("languageSelect").value;
@@ -25,11 +31,11 @@ function Welcome() {
     }
 
     i18n.changeLanguage(language); // Change app language
-    setStage(3);
+    setStage(4);
   };
 
   const handleTutorial = () => {
-    window.location.href = "/tutorial"; // Example: use translation for alert
+    window.location.href = "/tutorial";
   };
 
   const handleSkip = () => {
@@ -40,7 +46,7 @@ function Welcome() {
     <div ref={containerRef} style={styles.root}>
       <style>{cssStyles}</style>
       <div style={styles.container}>
-        {/* Stage 1 */}
+        {/* Stage 1: Welcome */}
         {stage === 1 && (
           <div className="welcome-stage">
             <h1 className="welcome-title">{t("welcome")}</h1>
@@ -48,8 +54,23 @@ function Welcome() {
           </div>
         )}
 
-        {/* Stage 2 */}
+        {/* Stage 2: Disclaimer */}
         {stage === 2 && (
+          <div className="disclaimer-stage show">
+            <div className="disclaimer-box">
+              <strong>⚠️ {t("disclaimerTitle", "Important Disclaimer")}</strong>
+              <p style={{ marginTop: 10 }}>
+                {t(
+                  "disclaimerText",
+                  "This bag is NOT designed for full power punches. It is made to train your accuracy and speed. Punching too hard may break the bag. Please use controlled force."
+                )}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Stage 3: Language & Age */}
+        {stage === 3 && (
           <div className="selection-stage show">
             <div className="selection-row">
               <div className="selection-group">
@@ -80,8 +101,8 @@ function Welcome() {
           </div>
         )}
 
-        {/* Stage 3 */}
-        {stage === 3 && (
+        {/* Stage 4: Tutorial/Skip */}
+        {stage === 4 && (
           <div className="tutorial-stage show">
             <div className="tutorial-buttons">
               <button className="tutorial-btn" onClick={handleTutorial}>
@@ -142,6 +163,19 @@ const cssStyles = `
   opacity: 0;
   animation: slideInUp 1s ease-out 2s forwards;
   letter-spacing: -0.02em;
+}
+
+.disclaimer-box {
+  margin: 32px auto 0 auto;
+  padding: 18px 24px;
+  background: #fffbe6;
+  color: #b44;
+  border: 2px solid #b44;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  max-width: 420px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  text-align: left;
 }
 
 .selection-stage,
