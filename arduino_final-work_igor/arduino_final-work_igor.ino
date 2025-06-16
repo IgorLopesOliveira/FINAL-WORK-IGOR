@@ -49,9 +49,14 @@ void sendPunch(String type) {
     http.begin(serverURL);
     http.addHeader("Content-Type", "application/json");
 
-    String payload = "{\"type\":\"" + type + "\"}";
-    int response = http.POST(payload);
+    String payload;
+    if (type.startsWith("[")) {
+      payload = "{\"type\":" + type + "}";  // Send as JSON array
+    } else {
+      payload = "{\"type\":\"" + type + "\"}";
+    }
 
+    int response = http.POST(payload);
     Serial.print("📨 POST status: ");
     Serial.println(response);
     http.end();
@@ -86,14 +91,12 @@ void loop() {
     }
 
     if (valFront > thresholdFront) {
-      sendPunch("Jab");
-      sendPunch("Cross");
+      sendPunch("[\"Jab\", \"Cross\"]");
       punchDetected = true;
     }
 
     if (valTop > thresholdTop) {
-      sendPunch("Left Uppercut");
-      sendPunch("Right Uppercut");
+      sendPunch("[\"Left Uppercut\", \"Right Uppercut\"]");
       punchDetected = true;
     }
 

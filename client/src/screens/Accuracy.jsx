@@ -3,30 +3,24 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
-// Game asks for these:
 const punches = [
   "Jab",
   "Cross",
-  "Left hook",
   "Right hook",
   "Left uppercut",
   "Right uppercut",
 ];
 
-const INITIAL_TIME = 3000; // ms
-const TIME_DECREMENT = 200; // ms
+const INITIAL_TIME = 3000;
+const TIME_DECREMENT = 200;
 
-// Mapping: which sensor events are valid for each game punch
-const punchGroups = {
-  "jab": ["jab", "cross"],                           // straight sensor
-  "cross": ["jab", "cross"],                         // straight sensor
-  "left uppercut": ["left uppercut", "right uppercut"],   // uppercut sensor
-  "right uppercut": ["left uppercut", "right uppercut"],  // uppercut sensor
-  "left hook": ["left hook"],                        // left hook sensor
-  "right hook": ["right hook"],                      // right hook sensor
-};
+const FRONT_PUNCHES = ["jab", "cross"];
+const UPPERCUT_PUNCHES = ["left uppercut", "right uppercut"];
 
-// Styles (unchanged)
+function normalize(str) {
+  return str.toLowerCase().replace(/_/g, " ").trim();
+}
+
 const styles = {
   container: {
     width: '100vw',
@@ -44,25 +38,6 @@ const styles = {
     position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '20px',
-    width: '100%',
-  },
-  icon: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    backgroundColor: '#2C2C2C',
-    color: '#EFEFEF',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '20px',
-    cursor: 'pointer',
   },
   title: {
     fontSize: '2rem',
@@ -134,12 +109,10 @@ const styles = {
   popupTitle: {
     fontSize: '1.6rem',
     fontWeight: 900,
-    marginBottom: '0.5rem',
   },
   popupText: {
     fontSize: '1.1rem',
     fontWeight: 400,
-    marginBottom: '0.5rem',
     color: '#222',
   },
   popupButton: {
@@ -158,105 +131,89 @@ const styles = {
   },
 };
 
-// Utility to normalize everything to lowercase + spaces
-function normalize(str) {
-  return str.toLowerCase().replace(/_/g, " ").trim();
-}
-
 function Accuracy() {
   const socket = useSocket();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const [phase, setPhase] = useState("menu"); // menu, show, input, fail, win, slow
+  const [phase, setPhase] = useState("menu");
   const [currentPunch, setCurrentPunch] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timer, setTimer] = useState(INITIAL_TIME);
-  const [feedback, setFeedback] = useState("");
+  const [failType, setFailType] = useState("");
   const [showInfo, setShowInfo] = useState(true);
   const timeoutRef = useRef(null);
+  const inputLocked = useRef(false);
 
-  // Buffer for punch events in the same tick
-  const punchBufferRef = useRef([]);
-
-  // Listen for punches and buffer them for each input phase
   useEffect(() => {
     if (!socket) return;
 
     const handlePunch = (data) => {
-      const punch = normalize(data.type || "");
-      // Only buffer during input phase
-      if (phase === "input") {
-        punchBufferRef.current.push(punch);
+      const expected = normalize(currentPunch);
+      const received = Array.isArray(data.type)
+        ? data.type.map(normalize)
+        : [normalize(data.type)];
+
+      if (phase === "menu") {
+        if (received.some(p => FRONT_PUNCHES.includes(p))) {
+          startGame();
+        }
+        return;
       }
-      // Start game from menu
-      if (phase === "menu" && (punch === "jab" || punch === "cross")) {
-        startGame();
+
+      if (phase !== "input" || inputLocked.current) return;
+
+      const matched = received.some(p => {
+        if (FRONT_PUNCHES.includes(expected)) return FRONT_PUNCHES.includes(p);
+        if (UPPERCUT_PUNCHES.includes(expected)) return UPPERCUT_PUNCHES.includes(p);
+        return p === expected;
+      });
+
+      inputLocked.current = true;
+      clearTimeout(timeoutRef.current);
+
+      if (matched) {
+        if (currentIndex === 9) {
+          setPhase("win");
+        } else {
+          setCurrentIndex(i => i + 1);
+          setTimer(t => Math.max(200, t - TIME_DECREMENT));
+          setPhase("show");
+        }
+      } else {
+        setFailType("fail");
+        setPhase("fail");
       }
     };
 
     socket.on("punch", handlePunch);
     return () => socket.off("punch", handlePunch);
-    // eslint-disable-next-line
-  }, [socket, phase]);
+  }, [socket, phase, currentPunch, currentIndex]);
 
-  // When phase changes to input, clear buffer and set up timer
   useEffect(() => {
     if (phase !== "input") return;
-    punchBufferRef.current = [];
-
+    inputLocked.current = false;
     timeoutRef.current = setTimeout(() => {
-      setPhase("slow");
+      inputLocked.current = true;
+      setFailType("slow");
+      setPhase("fail");
     }, timer);
-
     return () => clearTimeout(timeoutRef.current);
-    // eslint-disable-next-line
-  }, [phase, timer, currentPunch, currentIndex]);
+  }, [phase, timer]);
 
-  // When a punch is received, check if any in buffer match expected
   useEffect(() => {
-    if (phase !== "input") return;
-    // Listen for punch events and check buffer after each punch
-    const checkPunch = () => {
-      const expected = normalize(currentPunch);
-      const validGroup = punchGroups[expected] || [];
-      // Accept if ANY punch in buffer matches the valid group
-      const matched = punchBufferRef.current.some((p) => validGroup.includes(p));
-      if (matched) {
-        clearTimeout(timeoutRef.current);
-        if (currentIndex === 4) {
-          setPhase("win");
-        } else {
-          setCurrentIndex(idx => idx + 1);
-          setTimer(t => Math.max(200, t - TIME_DECREMENT));
-          setPhase("show");
-        }
-      } else if (punchBufferRef.current.length > 0) {
-        clearTimeout(timeoutRef.current);
-        setFeedback(punchBufferRef.current.join(", "));
-        setPhase("fail");
-      }
-    };
-
-    // Listen for punch events
-    const interval = setInterval(checkPunch, 50);
-    return () => clearInterval(interval);
-    // eslint-disable-next-line
-  }, [phase, timer, currentPunch, currentIndex]);
-
-  // Show next punch
-  useEffect(() => {
-    if (phase !== "show") return;
-    const next = punches[Math.floor(Math.random() * punches.length)];
-    setCurrentPunch(next);
-    setPhase("input");
+    if (phase === "show") {
+      const next = punches[Math.floor(Math.random() * punches.length)];
+      setCurrentPunch(next);
+      setPhase("input");
+    }
   }, [phase]);
 
   const startGame = () => {
     setCurrentIndex(0);
     setTimer(INITIAL_TIME);
     setPhase("show");
-    setFeedback("");
+    setFailType("");
     setShowInfo(false);
   };
 
@@ -264,30 +221,25 @@ function Accuracy() {
     setPhase("menu");
     setCurrentIndex(0);
     setTimer(INITIAL_TIME);
-    setFeedback("");
+    setFailType("");
     setCurrentPunch("");
     setShowInfo(true);
     clearTimeout(timeoutRef.current);
+    inputLocked.current = false;
   };
 
-  // -- Render --
   if (showInfo) {
     return (
       <div style={styles.popupOverlay}>
         <div style={styles.popup}>
-          <div style={styles.popupTitle}>
-            {t("accuracy.infoTitle", "How the game works")}
-          </div>
+          <div style={styles.popupTitle}>{t("accuracy.infoTitle", "How the game works")}</div>
           <div style={styles.popupText}>
             {t(
               "accuracy.infoText",
-              "You will see a punch type on the screen. You must hit the correct punch as quickly as possible before the timer runs out. Each time you get it right, the time to react gets shorter. Complete 10 punches in a row to win!"
+              "You will see a punch type on the screen. Hit the correct punch before the time runs out. 10 correct punches to win!"
             )}
           </div>
-          <button
-            style={styles.popupButton}
-            onClick={() => setShowInfo(false)}
-          >
+          <button style={styles.popupButton} onClick={() => setShowInfo(false)}>
             {t("accuracy.understood", "Understood")}
           </button>
         </div>
@@ -298,108 +250,59 @@ function Accuracy() {
   return (
     <div style={styles.container}>
       {phase === "menu" && (
-        <MenuScreen navigate={navigate} t={t} />
+        <div style={styles.centered}>
+          <button
+            style={{
+              position: "absolute",
+              top: 24,
+              right: 32,
+              background: "none",
+              border: "none",
+              fontSize: "2rem",
+              cursor: "pointer",
+            }}
+            onClick={() => navigate("/minimenu")}
+          >
+            ↩
+          </button>
+          <h1 style={styles.title}>{t("accuracy.title", "Accuracy Game")}</h1>
+          <div style={{ marginTop: "2rem", fontSize: "1.3rem", fontWeight: 700 }}>
+            {t("accuracy.jabToStart", "Put your gloves on and throw a jab to start")}
+          </div>
+        </div>
       )}
       {phase === "input" && (
-        <InputScreen
-          currentPunch={currentPunch}
-          currentIndex={currentIndex}
-          timer={timer}
-          t={t}
-          styles={styles}
-        />
+        <div style={styles.centered}>
+          <h2 style={styles.title}>{t("accuracy.hit", "Hit this punch!")}</h2>
+          <div style={styles.bigText}>{currentPunch}</div>
+          <div style={styles.progress}>{currentIndex + 1}/10</div>
+          <div style={{ marginTop: "1rem", fontSize: "1.2rem" }}>
+            {t("accuracy.timeLeft", "Time left")}: {(timer / 1000).toFixed(1)}s
+          </div>
+        </div>
       )}
       {phase === "fail" && (
-        <FailScreen resetGame={resetGame} t={t} styles={styles} />
-      )}
-      {phase === "slow" && (
-        <TooSlowScreen resetGame={resetGame} t={t} styles={styles} />
+        <div style={styles.centered}>
+          <h2 style={{ ...styles.title, ...(failType === "slow" ? styles.slow : styles.fail) }}>
+            {failType === "slow"
+              ? t("accuracy.tooSlow", "Too Slow!")
+              : t("accuracy.wrongPunch", "Wrong Punch")}
+          </h2>
+          <button style={styles.button} onClick={resetGame}>
+            {t("accuracy.backToMenu", "Back to Accuracy Menu")}
+          </button>
+        </div>
       )}
       {phase === "win" && (
-        <WinScreen resetGame={resetGame} t={t} styles={styles} />
+        <div style={styles.centered}>
+          <h1 style={styles.title}>
+            {t("accuracy.completed", "You completed all 10 punches!")}
+          </h1>
+          <button style={styles.button} onClick={resetGame}>
+            {t("accuracy.playAgain", "Play Again")}
+          </button>
+        </div>
       )}
-    </div>
-  );
-}
-
-function MenuScreen({ navigate, t }) {
-  return (
-    <div style={styles.centered}>
-      <button
-        style={{
-          position: "absolute",
-          top: 24,
-          right: 32,
-          background: "none",
-          border: "none",
-          color: "#2C2C2C",
-          fontSize: "2rem",
-          cursor: "pointer",
-          zIndex: 2,
-        }}
-        onClick={() => navigate("/minimenu")}
-        aria-label="Back"
-      >
-        ↩
-      </button>
-      <h1 style={styles.title}>{t("accuracy.title", "Accuracy Game")}</h1>
-      <div style={{ marginTop: "2rem", fontSize: "1.3rem", fontWeight: 700 }}>
-        {t("accuracy.jabToStart", "Put your gloves on and throw a jab to start")}
-      </div>
-    </div>
-  );
-}
-
-function InputScreen({ currentPunch, currentIndex, timer, t, styles }) {
-  return (
-    <div style={styles.centered}>
-      <h2 style={styles.title}>{t("accuracy.hit", "Hit this punch!")}</h2>
-      <div style={styles.bigText}>{currentPunch}</div>
-      <div style={styles.progress}>
-        {currentIndex + 1}/10
-      </div>
-      <div style={{ marginTop: "1rem", fontSize: "1.2rem" }}>
-        {t("accuracy.timeLeft", "Time left")}: {(timer / 1000).toFixed(1)}s
-      </div>
-    </div>
-  );
-}
-
-function FailScreen({ resetGame, t, styles }) {
-  return (
-    <div style={styles.centered}>
-      <h2 style={{ ...styles.title, ...styles.fail }}>
-        {t("accuracy.wrongPunch", "Wrong Punch")}
-      </h2>
-      <button style={styles.button} onClick={resetGame}>
-        {t("accuracy.backToMenu", "Back to Accuracy Menu")}
-      </button>
-    </div>
-  );
-}
-
-function TooSlowScreen({ resetGame, t, styles }) {
-  return (
-    <div style={styles.centered}>
-      <h2 style={{ ...styles.title, ...styles.slow }}>
-        {t("accuracy.tooSlow", "Too Slow!")}
-      </h2>
-      <button style={styles.button} onClick={resetGame}>
-        {t("accuracy.backToMenu", "Back to Accuracy Menu")}
-      </button>
-    </div>
-  );
-}
-
-function WinScreen({ resetGame, t, styles }) {
-  return (
-    <div style={styles.centered}>
-      <h1 style={styles.title}>
-        {t("accuracy.completed", "You completed all 10 punches!")}
-      </h1>
-      <button style={styles.button} onClick={resetGame}>
-        {t("accuracy.playAgain", "Play Again")}
-      </button>
     </div>
   );
 }

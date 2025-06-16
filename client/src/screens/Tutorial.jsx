@@ -89,13 +89,13 @@ export default function Tutorial() {
     if (tutorialSteps[step].type === "intro" || tutorialSteps[step].type === "sound-intro") {
       const timeout = setTimeout(() => {
         setStep((s) => Math.min(s + 1, tutorialSteps.length - 1));
-      }, 3500);
+      }, 4000);
       return () => clearTimeout(timeout);
     }
     if (tutorialSteps[step].type === "end") {
       const timeout = setTimeout(() => {
         navigate("/home");
-      }, 3500);
+      }, 4000);
       return () => clearTimeout(timeout);
     }
     // Cleanup any pending audio timeout when step changes

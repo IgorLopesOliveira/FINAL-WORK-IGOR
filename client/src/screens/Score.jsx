@@ -21,16 +21,23 @@ function Score() {
   };
 
   useEffect(() => {
-    if (timeChosen && punchesPerMinute) {
+  const alreadySaved = sessionStorage.getItem("scoreSaved");
+    if (!alreadySaved && timeChosen && punchesPerMinute) {
       saveScoreToLocalStorage({
         timeChosen,
         punchesPerMinute,
         punchesByType,
         date: new Date().toISOString()
       });
+      sessionStorage.setItem("scoreSaved", "true");
     }
+
+    return () => {
+      sessionStorage.removeItem("scoreSaved"); // clean up on unmount
+    };
     // eslint-disable-next-line
   }, []);
+
 
   return (
     <div className="score-container">

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
-const punches = ["Jab", "Left hook", "Left Uppercut", "Right Uppercut", "Cross"];
+const punches = ["Jab", "Right hook", "Left Uppercut", "Right Uppercut", "Cross"];
 
 const styles = {
   container: {
@@ -29,22 +29,6 @@ const styles = {
     alignItems: 'center',
     marginBottom: '20px',
     width: '100%',
-  },
-  icon: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    backgroundColor: '#2C2C2C',
-    color: '#EFEFEF',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '20px',
-    cursor: 'pointer',
-  },
-  iconSymbol: {
-    fontSize: '20px',
-    lineHeight: '1',
   },
   title: {
     fontSize: '2rem',
@@ -113,12 +97,10 @@ const styles = {
   popupTitle: {
     fontSize: '1.6rem',
     fontWeight: 900,
-    marginBottom: '0.5rem',
   },
   popupText: {
     fontSize: '1.1rem',
     fontWeight: 400,
-    marginBottom: '0.5rem',
     color: '#222',
   },
   popupButton: {
@@ -142,7 +124,7 @@ function Memorize() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const [phase, setPhase] = useState("menu"); // menu, show, wait, input, fail, win
+  const [phase, setPhase] = useState("menu");
   const [combo, setCombo] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentDisplay, setCurrentDisplay] = useState("");
@@ -152,12 +134,16 @@ function Memorize() {
   const punchCooldown = 1000;
   const lastPunchTimeRef = useRef(0);
 
-  // Listen for jab to start the game (only in menu phase)
+  const FRONT_PUNCHES = ["jab", "cross"];
+  const UPPERCUT_PUNCHES = ["left uppercut", "right uppercut"];
+
   useEffect(() => {
     if (!socket || phase !== "menu") return;
     const handlePunch = (data) => {
-      const punch = (data.type || "").toLowerCase().trim();
-      if (punch === "jab" || punch === "cross") {
+      const punchesReceived = Array.isArray(data.type)
+        ? data.type.map(p => p.toLowerCase().trim())
+        : [String(data.type).toLowerCase().trim()];
+      if (punchesReceived.some(p => FRONT_PUNCHES.includes(p))) {
         startGame();
       }
     };
@@ -165,55 +151,44 @@ function Memorize() {
     return () => socket.off("punch", handlePunch);
   }, [socket, phase]);
 
-  // Listen for punches during input phase
   useEffect(() => {
     if (!socket || phase !== "input") return;
     const handlePunch = (data) => {
       const now = Date.now();
       if (now - lastPunchTimeRef.current < punchCooldown) return;
-      const punch = (data.type || "").toLowerCase().trim();
+
+      const punchesReceived = Array.isArray(data.type)
+        ? data.type.map(p => p.toLowerCase().trim())
+        : [String(data.type).toLowerCase().trim()];
+
       const expected = (combo[currentIndex] || "").toLowerCase().trim();
-
-      // Accept jab/cross as equivalent, and left/right uppercut as equivalent
-      const FRONT_PUNCHES = ["jab", "cross"];
-      const UPPERCUT_PUNCHES = ["left uppercut", "right uppercut"];
-
       lastPunchTimeRef.current = now;
 
-      // If expected is jab or cross, accept either
-      if (FRONT_PUNCHES.includes(expected) && FRONT_PUNCHES.includes(punch)) {
-        setFeedback(combo[currentIndex]);
-        setCurrentIndex((prev) => prev + 1);
-        return;
-      }
-      // If expected is left/right uppercut, accept either
-      if (UPPERCUT_PUNCHES.includes(expected) && UPPERCUT_PUNCHES.includes(punch)) {
-        setFeedback(combo[currentIndex]);
-        setCurrentIndex((prev) => prev + 1);
-        return;
-      }
-      // Otherwise, strict match
-      if (punch === expected) {
+      const matched = punchesReceived.some(p => {
+        if (FRONT_PUNCHES.includes(expected)) return FRONT_PUNCHES.includes(p);
+        if (UPPERCUT_PUNCHES.includes(expected)) return UPPERCUT_PUNCHES.includes(p);
+        return p === expected;
+      });
+
+      if (matched) {
         setFeedback(combo[currentIndex]);
         setCurrentIndex((prev) => prev + 1);
       } else {
-        setFeedback(data.type);
+        setFeedback(punchesReceived.join(", "));
         setPhase("fail");
       }
     };
     socket.on("punch", handlePunch);
     return () => socket.off("punch", handlePunch);
-  }, [socket, combo, currentIndex, phase, punchCooldown]);
+  }, [socket, combo, currentIndex, phase]);
 
   useEffect(() => {
     if (phase === "input" && currentIndex === combo.length && combo.length > 0) {
       setTimeout(() => {
-        if (combo.length === 5) {
+        if (combo.length === 10) {
           setPhase("win");
         } else {
-          setTimeout(() => {
-            nextRound();
-          }, 2000);
+          setTimeout(() => nextRound(), 2000);
         }
       }, 500);
     }
@@ -223,7 +198,6 @@ function Memorize() {
     if (phase === "show" && combo.length > 0) {
       showCombo(combo);
     }
-    // eslint-disable-next-line
   }, [phase, combo]);
 
   const nextRound = () => {
@@ -290,7 +264,6 @@ function Memorize() {
     setShowInfo(true);
   };
 
-  // Info popup before the game
   const renderInfoPopup = () => (
     <div style={styles.popupOverlay}>
       <div style={styles.popup}>
@@ -298,7 +271,7 @@ function Memorize() {
         <div style={styles.popupText}>
           {t(
             "memorize.infoText",
-            "You will have on the screen a punch type, you will have to hit the right punch. If correct you'll have a punch added to the one before, it's quick so you have to be focused. As you keep getting the combinations correct more punches will be added till you reach a 10 punch combination."
+            "A punch appears. Hit it correctly. The combo grows. If wrong, you fail. Complete 10 to win!"
           )}
         </div>
         <button style={styles.popupButton} onClick={() => setShowInfo(false)}>
@@ -308,7 +281,6 @@ function Memorize() {
     </div>
   );
 
-  // Render functions for each phase
   const renderMenu = () => (
     <div style={styles.centered}>
       <button
@@ -318,23 +290,16 @@ function Memorize() {
           right: 32,
           background: "none",
           border: "none",
-          color: "#2C2C2C",
           fontSize: "2rem",
           cursor: "pointer",
-          zIndex: 2,
-          padding: 0,
-          width: "auto",
-          height: "auto",
-          boxShadow: "none",
         }}
         onClick={() => navigate("/minimenu")}
-        aria-label="Back"
       >
-        <span style={{ fontSize: "2rem", lineHeight: 1 }}>↩</span>
+        ↩
       </button>
       <div style={styles.header}>
         <div />
-        <h1 style={styles.title}>{t("memorize.memorizeTitle")}</h1>
+        <h1 style={styles.title}>{t("memorize.memorizeTitle", "Memorize")}</h1>
         <div />
       </div>
       <div style={{ marginTop: "2rem", fontSize: "1.3rem", fontWeight: 700 }}>
@@ -345,14 +310,14 @@ function Memorize() {
 
   const renderShow = () => (
     <div style={styles.centered}>
-      <h2 style={styles.title}>{t("memorize.memorizeTitle")}</h2>
+      <h2 style={styles.title}>{t("memorize.memorizeTitle", "Memorize")}</h2>
       <div style={styles.bigText}>{currentDisplay}</div>
     </div>
   );
 
   const renderWait = () => (
     <div style={styles.centered}>
-      <h2 style={styles.title}>{t("memorize.yourTurn")}</h2>
+      <h2 style={styles.title}>{t("memorize.yourTurn", "Your Turn")}</h2>
       <div style={styles.bigText}>{countdown > 0 ? countdown : ""}</div>
     </div>
   );
@@ -368,15 +333,15 @@ function Memorize() {
 
   const renderFail = () => (
     <div style={styles.centered}>
-      <h2 style={{ ...styles.title, ...styles.fail }}>{t("memorize.wrongPunch")}</h2>
-      <button style={styles.button} onClick={resetGame}>{t("memorize.tryAgain")}</button>
+      <h2 style={{ ...styles.title, ...styles.fail }}>{t("memorize.wrongPunch", "Wrong Punch")}</h2>
+      <button style={styles.button} onClick={resetGame}>{t("memorize.tryAgain", "Try Again")}</button>
     </div>
   );
 
   const renderWin = () => (
     <div style={styles.centered}>
-      <h1 style={styles.title}>{t("memorize.completed")}</h1>
-      <button style={styles.button} onClick={resetGame}>{t("memorize.playAgain")}</button>
+      <h1 style={styles.title}>{t("memorize.completed", "You completed the combo!")}</h1>
+      <button style={styles.button} onClick={resetGame}>{t("memorize.playAgain", "Play Again")}</button>
     </div>
   );
 

@@ -132,14 +132,13 @@ function Fight() {
   const tripleTapRef = useRef(null);
   const tripleBellRef = useRef(null);
 
-  // For deduplication: store last punch time for each logical type
   const lastPunchTimeRef = useRef({
     straights: 0,
     hook: 0,
     uppercut: 0,
   });
 
-  const PUNCH_COOLDOWN = 400; // ms
+  const PUNCH_COOLDOWN = 400;
 
   const resetFight = () => {
     setFightState("config");
@@ -156,30 +155,34 @@ function Fight() {
 
     const punchHandler = (data) => {
       if (!data?.type) return;
-      const punchType = data.type.toLowerCase();
 
-      // Map all straights (jab/cross) to "straights", all uppercuts to "uppercut", hooks to "hook"
-      let logicalType = "";
-      if (punchType === "jab" || punchType === "cross") {
-        logicalType = "straights";
-      } else if (punchType === "left uppercut" || punchType === "right uppercut") {
-        logicalType = "uppercut";
-      } else if (punchType === "left hook" || punchType === "right hook") {
-        logicalType = "hook";
-      } else {
-        return; // ignore unknown types
-      }
+      const punches = Array.isArray(data.type)
+        ? data.type.map(p => p.toLowerCase())
+        : [String(data.type).toLowerCase()];
 
-      // Deduplicate: only count if enough time has passed since last of this logical type
       const now = Date.now();
-      if (now - lastPunchTimeRef.current[logicalType] < PUNCH_COOLDOWN) return;
-      lastPunchTimeRef.current[logicalType] = now;
 
-      setPunchCount(c => c + 1);
-      setPunchesByType(prev => ({
-        ...prev,
-        [logicalType]: (prev[logicalType] || 0) + 1
-      }));
+      for (const punchType of punches) {
+        let logicalType = "";
+        if (punchType === "jab" || punchType === "cross") {
+          logicalType = "straights";
+        } else if (punchType === "left uppercut" || punchType === "right uppercut") {
+          logicalType = "uppercut";
+        } else if (punchType === "left hook" || punchType === "right hook") {
+          logicalType = "hook";
+        } else {
+          continue;
+        }
+
+        if (now - lastPunchTimeRef.current[logicalType] < PUNCH_COOLDOWN) continue;
+        lastPunchTimeRef.current[logicalType] = now;
+
+        setPunchCount(c => c + 1);
+        setPunchesByType(prev => ({
+          ...prev,
+          [logicalType]: (prev[logicalType] || 0) + 1
+        }));
+      }
     };
 
     socket.on("punch", punchHandler);
@@ -199,22 +202,14 @@ function Fight() {
   }, [fightState, timeLeft]);
 
   useEffect(() => {
-    // Pre-first round bell
     if (fightState === "countdown" && timeLeft === 0) {
-      if (tripleBellRef.current) {
-        tripleBellRef.current.currentTime = 0;
-        tripleBellRef.current.play();
-      }
+      tripleBellRef.current?.play();
       setFightState("fighting");
       setTimeLeft(roundTime * 60);
     }
 
-    // End-of-round bell + transition
     if (fightState === "fighting" && timeLeft === 0) {
-      if (tripleBellRef.current) {
-        tripleBellRef.current.currentTime = 0;
-        tripleBellRef.current.play();
-      }
+      tripleBellRef.current?.play();
       if (currentRound < numRounds) {
         if (restTime > 0) {
           setFightState("rest");
@@ -227,16 +222,20 @@ function Fight() {
       } else {
         const totalSec = roundTime * 60 * numRounds;
         const ppm = totalSec ? Math.round((punchCount / totalSec) * 60) : 0;
-        navigate("/score", { state: { timeChosen: roundTime * 60, numRounds, restTime, punchesPerMinute: ppm, punchesByType } });
+        navigate("/score", {
+          state: {
+            timeChosen: roundTime * 60,
+            numRounds,
+            restTime,
+            punchesPerMinute: ppm,
+            punchesByType,
+          }
+        });
       }
     }
 
-    // End-of-rest bell + next round start
     if (fightState === "rest" && timeLeft === 0) {
-      if (tripleBellRef.current) {
-        tripleBellRef.current.currentTime = 0;
-        tripleBellRef.current.play();
-      }
+      tripleBellRef.current?.play();
       setCurrentRound(r => r + 1);
       setFightState("fighting");
       setTimeLeft(roundTime * 60);
@@ -249,7 +248,7 @@ function Fight() {
     setCurrentRound(1);
     setFightState("countdown");
     setTimeLeft(10);
-    lastPunchTimeRef.current = { straights: 0, hook: 0, uppercut: 0 }; // reset deduplication
+    lastPunchTimeRef.current = { straights: 0, hook: 0, uppercut: 0 };
   };
 
   const formatTime = s => {
@@ -263,19 +262,19 @@ function Fight() {
       <button style={styles.backButton} onClick={() => navigate("/home")}>↩</button>
       <div style={styles.header}><div/><h1 style={styles.title}>{t("fight.roundTime")}</h1><div/></div>
       <div style={styles.timeSelector}>
-        <button style={styles.smallButton} onClick={() => setRoundTime(t => Math.max(1, t-1))}>-</button>
-        <span style={{fontSize:'1.5rem',fontWeight:'700'}}>{roundTime} {t("fight.minutes")}</span>
-        <button style={styles.smallButton} onClick={() => setRoundTime(t => Math.min(10, t+1))}>+</button>
+        <button style={styles.smallButton} onClick={() => setRoundTime(t => Math.max(1, t - 1))}>-</button>
+        <span style={{ fontSize: '1.5rem', fontWeight: '700' }}>{roundTime} {t("fight.minutes")}</span>
+        <button style={styles.smallButton} onClick={() => setRoundTime(t => Math.min(10, t + 1))}>+</button>
       </div>
       <div style={styles.roundsSelector}>
-        <button style={styles.smallButton} onClick={() => setNumRounds(n => Math.max(1, n-1))}>-</button>
-        <span style={{fontSize:'1.5rem',fontWeight:'700'}}>{numRounds} {t("fight.rounds", "Rounds")}</span>
-        <button style={styles.smallButton} onClick={() => setNumRounds(n => Math.min(12, n+1))}>+</button>
+        <button style={styles.smallButton} onClick={() => setNumRounds(n => Math.max(1, n - 1))}>-</button>
+        <span style={{ fontSize: '1.5rem', fontWeight: '700' }}>{numRounds} {t("fight.rounds", "Rounds")}</span>
+        <button style={styles.smallButton} onClick={() => setNumRounds(n => Math.min(12, n + 1))}>+</button>
       </div>
       <div style={styles.restSelector}>
-        <button style={styles.smallButton} onClick={() => setRestTime(r => Math.max(0, r-1))}>-</button>
-        <span style={{fontSize:'1.5rem',fontWeight:'700'}}>{restTime} {t("fight.rest", "Rest (min)")}</span>
-        <button style={styles.smallButton} onClick={() => setRestTime(r => Math.min(5, r+1))}>+</button>
+        <button style={styles.smallButton} onClick={() => setRestTime(r => Math.max(0, r - 1))}>-</button>
+        <span style={{ fontSize: '1.5rem', fontWeight: '700' }}>{restTime} {t("fight.rest", "Rest (min)")}</span>
+        <button style={styles.smallButton} onClick={() => setRestTime(r => Math.min(5, r + 1))}>+</button>
       </div>
       <button style={styles.button} onClick={startCountdown}>{t("fight.start")}</button>
     </div>
@@ -283,17 +282,17 @@ function Fight() {
 
   const renderCountdown = () => (
     <div style={styles.container}>
-      <h2 style={{fontSize:'2rem',fontWeight:'700',marginBottom:0}}>{t("fight.round", "Round")} {currentRound}/{numRounds}</h2>
-      <h1 style={{fontSize:'6rem',fontWeight:'900'}}>{timeLeft}</h1>
+      <h2 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: 0 }}>{t("fight.round", "Round")} {currentRound}/{numRounds}</h2>
+      <h1 style={{ fontSize: '6rem', fontWeight: '900' }}>{timeLeft}</h1>
     </div>
   );
 
   const renderFighting = () => (
     <div style={styles.container}>
-      <h2 style={{fontSize:'2rem',fontWeight:'700',marginBottom:0}}>{t("fight.round", "Round")} {currentRound}/{numRounds}</h2>
+      <h2 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: 0 }}>{t("fight.round", "Round")} {currentRound}/{numRounds}</h2>
       <div style={styles.fighting}>
-        <div style={{order: flipLayout? 2 : 1}}>{formatTime(timeLeft)}</div>
-        {!hidePunches && <div style={{order: flipLayout?1:2}}>{punchCount}</div>}
+        <div style={{ order: flipLayout ? 2 : 1 }}>{formatTime(timeLeft)}</div>
+        {!hidePunches && <div style={{ order: flipLayout ? 1 : 2 }}>{punchCount}</div>}
         <button style={styles.button} onClick={() => setFightState("paused")}>{t("fight.pause")}</button>
       </div>
     </div>
@@ -301,23 +300,22 @@ function Fight() {
 
   const renderRest = () => (
     <div style={styles.container}>
-      <h2 style={{fontSize:'2rem',fontWeight:'700',marginBottom:0}}>{t("fight.restBetween", "Rest Between Rounds")}</h2>
-      <h1 style={{fontSize:'6rem',fontWeight:'900'}}>{formatTime(timeLeft)}</h1>
-      <div style={{fontSize:'1.5rem',marginTop:20}}>{t("fight.nextRound", "Next round starts soon...")}</div>
+      <h2 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: 0 }}>{t("fight.restBetween", "Rest Between Rounds")}</h2>
+      <h1 style={{ fontSize: '6rem', fontWeight: '900' }}>{formatTime(timeLeft)}</h1>
+      <div style={{ fontSize: '1.5rem', marginTop: 20 }}>{t("fight.nextRound", "Next round starts soon...")}</div>
     </div>
   );
 
   const renderPaused = () => (
     <div style={styles.container}>
-      <h2 style={{fontSize:'2rem',fontWeight:'700',marginBottom:0}}>{t("fight.round", "Round")} {currentRound}/{numRounds}</h2>
+      <h2 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: 0 }}>{t("fight.round", "Round")} {currentRound}/{numRounds}</h2>
       <div style={styles.paused}>
-        <div style={{order: flipLayout?2:1}}>{formatTime(timeLeft)}</div>
-        {!hidePunches && <div style={{order: flipLayout?1:2}}>{punchCount}</div>}
+        <div style={{ order: flipLayout ? 2 : 1 }}>{formatTime(timeLeft)}</div>
+        {!hidePunches && <div style={{ order: flipLayout ? 1 : 2 }}>{punchCount}</div>}
       </div>
       <div style={styles.buttonGroup}>
         <button style={styles.button} onClick={() => setHidePunches(v => !v)}>{t("fight.hide")}</button>
         <button style={styles.button} onClick={() => setFightState("fighting")}>▶</button>
-        {/* <button style={styles.button} onClick={() => setFlipLayout(v => !v)}>{t("fight.switch")}</button> */}
         <button style={styles.button} onClick={resetFight}>{t("fight.stop")}</button>
       </div>
     </div>
