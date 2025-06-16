@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 // Save score to localStorage as an array of scores
 function saveScoreToLocalStorage(score) {
@@ -13,6 +13,7 @@ function Score() {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const hasSavedRef = useRef(false); // ✅ guard for double save
 
   const { timeChosen, punchesPerMinute, punchesByType } = location.state || {
     timeChosen: 0,
@@ -21,23 +22,16 @@ function Score() {
   };
 
   useEffect(() => {
-  const alreadySaved = sessionStorage.getItem("scoreSaved");
-    if (!alreadySaved && timeChosen && punchesPerMinute) {
+    if (!hasSavedRef.current && timeChosen && punchesPerMinute) {
       saveScoreToLocalStorage({
         timeChosen,
         punchesPerMinute,
         punchesByType,
         date: new Date().toISOString()
       });
-      sessionStorage.setItem("scoreSaved", "true");
+      hasSavedRef.current = true;
     }
-
-    return () => {
-      sessionStorage.removeItem("scoreSaved"); // clean up on unmount
-    };
-    // eslint-disable-next-line
-  }, []);
-
+  }, [timeChosen, punchesPerMinute, punchesByType]);
 
   return (
     <div className="score-container">
