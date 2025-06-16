@@ -26,7 +26,7 @@ const punchGroups = {
   "right hook": ["right hook"],                      // right hook sensor
 };
 
-// Styles
+// Styles (unchanged)
 const styles = {
   container: {
     width: '100vw',
@@ -173,24 +173,50 @@ function Accuracy() {
   const [showInfo, setShowInfo] = useState(true);
   const timeoutRef = useRef(null);
 
-  // Generic punch handler
-  const handlePunch = (data) => {
-    const punch = normalize(data.type || "");
-    if (phase === "menu") {
-      if (punch === "jab" || punch === "cross") {
+  // Buffer for punch events in the same tick
+  const punchBufferRef = useRef([]);
+
+  // Listen for punches and buffer them for each input phase
+  useEffect(() => {
+    if (!socket) return;
+
+    const handlePunch = (data) => {
+      const punch = normalize(data.type || "");
+      // Only buffer during input phase
+      if (phase === "input") {
+        punchBufferRef.current.push(punch);
+      }
+      // Start game from menu
+      if (phase === "menu" && (punch === "jab" || punch === "cross")) {
         startGame();
       }
-      return;
-    }
+    };
 
+    socket.on("punch", handlePunch);
+    return () => socket.off("punch", handlePunch);
+    // eslint-disable-next-line
+  }, [socket, phase]);
+
+  // When phase changes to input, clear buffer and set up timer
+  useEffect(() => {
     if (phase !== "input") return;
+    punchBufferRef.current = [];
 
+    timeoutRef.current = setTimeout(() => {
+      checkPunchBuffer();
+    }, timer);
+
+    return () => clearTimeout(timeoutRef.current);
+    // eslint-disable-next-line
+  }, [phase, timer, currentPunch, currentIndex]);
+
+  // When a punch is received, check if any in buffer match expected
+  function checkPunchBuffer() {
     const expected = normalize(currentPunch);
     const validGroup = punchGroups[expected] || [];
-
-    clearTimeout(timeoutRef.current);
-
-    if (validGroup.includes(punch)) {
+    // Accept if ANY punch in buffer matches the valid group
+    const matched = punchBufferRef.current.some((p) => validGroup.includes(p));
+    if (matched) {
       if (currentIndex === 9) {
         setPhase("win");
       } else {
@@ -199,20 +225,18 @@ function Accuracy() {
         setPhase("show");
       }
     } else {
-      setFeedback(data.type);
+      setFeedback(punchBufferRef.current.join(", "));
       setPhase("fail");
     }
-  };
+  }
 
-  // Attach socket listener
+  // Show next punch
   useEffect(() => {
-    if (!socket) return;
-    socket.on("punch", handlePunch);
-    return () => {
-      socket.off("punch", handlePunch);
-      clearTimeout(timeoutRef.current);
-    };
-  }, [socket, phase, currentPunch, currentIndex, timer]);
+    if (phase !== "show") return;
+    const next = punches[Math.floor(Math.random() * punches.length)];
+    setCurrentPunch(next);
+    setPhase("input");
+  }, [phase]);
 
   const startGame = () => {
     setCurrentIndex(0);
@@ -221,19 +245,6 @@ function Accuracy() {
     setFeedback("");
     setShowInfo(false);
   };
-
-  // Show next punch
-  useEffect(() => {
-    if (phase !== "show") return;
-    const next = punches[Math.floor(Math.random() * punches.length)];
-    setCurrentPunch(next);
-    setPhase("input");
-
-    timeoutRef.current = setTimeout(() => {
-      setPhase("fail");
-      setFeedback("");
-    }, timer);
-  }, [phase]);
 
   const resetGame = () => {
     setPhase("menu");
