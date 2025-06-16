@@ -13,7 +13,7 @@ const punches = [
   "Right uppercut",
 ];
 
-const INITIAL_TIME = 2000; // ms
+const INITIAL_TIME = 3000; // ms
 const TIME_DECREMENT = 200; // ms
 
 // Mapping: which sensor events are valid for each game punch
@@ -95,6 +95,9 @@ const styles = {
   fail: {
     color: "#B44",
   },
+  slow: {
+    color: "#B44",
+  },
   centered: {
     display: 'flex',
     flexDirection: 'column',
@@ -165,7 +168,7 @@ function Accuracy() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const [phase, setPhase] = useState("menu"); // menu, show, input, fail, win
+  const [phase, setPhase] = useState("menu"); // menu, show, input, fail, win, slow
   const [currentPunch, setCurrentPunch] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timer, setTimer] = useState(INITIAL_TIME);
@@ -203,7 +206,7 @@ function Accuracy() {
     punchBufferRef.current = [];
 
     timeoutRef.current = setTimeout(() => {
-      checkPunchBuffer();
+      setPhase("slow");
     }, timer);
 
     return () => clearTimeout(timeoutRef.current);
@@ -211,24 +214,35 @@ function Accuracy() {
   }, [phase, timer, currentPunch, currentIndex]);
 
   // When a punch is received, check if any in buffer match expected
-  function checkPunchBuffer() {
-    const expected = normalize(currentPunch);
-    const validGroup = punchGroups[expected] || [];
-    // Accept if ANY punch in buffer matches the valid group
-    const matched = punchBufferRef.current.some((p) => validGroup.includes(p));
-    if (matched) {
-      if (currentIndex === 9) {
-        setPhase("win");
-      } else {
-        setCurrentIndex(idx => idx + 1);
-        setTimer(t => Math.max(200, t - TIME_DECREMENT));
-        setPhase("show");
+  useEffect(() => {
+    if (phase !== "input") return;
+    // Listen for punch events and check buffer after each punch
+    const checkPunch = () => {
+      const expected = normalize(currentPunch);
+      const validGroup = punchGroups[expected] || [];
+      // Accept if ANY punch in buffer matches the valid group
+      const matched = punchBufferRef.current.some((p) => validGroup.includes(p));
+      if (matched) {
+        clearTimeout(timeoutRef.current);
+        if (currentIndex === 4) {
+          setPhase("win");
+        } else {
+          setCurrentIndex(idx => idx + 1);
+          setTimer(t => Math.max(200, t - TIME_DECREMENT));
+          setPhase("show");
+        }
+      } else if (punchBufferRef.current.length > 0) {
+        clearTimeout(timeoutRef.current);
+        setFeedback(punchBufferRef.current.join(", "));
+        setPhase("fail");
       }
-    } else {
-      setFeedback(punchBufferRef.current.join(", "));
-      setPhase("fail");
-    }
-  }
+    };
+
+    // Listen for punch events
+    const interval = setInterval(checkPunch, 50);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line
+  }, [phase, timer, currentPunch, currentIndex]);
 
   // Show next punch
   useEffect(() => {
@@ -298,6 +312,9 @@ function Accuracy() {
       {phase === "fail" && (
         <FailScreen resetGame={resetGame} t={t} styles={styles} />
       )}
+      {phase === "slow" && (
+        <TooSlowScreen resetGame={resetGame} t={t} styles={styles} />
+      )}
       {phase === "win" && (
         <WinScreen resetGame={resetGame} t={t} styles={styles} />
       )}
@@ -353,6 +370,19 @@ function FailScreen({ resetGame, t, styles }) {
     <div style={styles.centered}>
       <h2 style={{ ...styles.title, ...styles.fail }}>
         {t("accuracy.wrongPunch", "Wrong Punch")}
+      </h2>
+      <button style={styles.button} onClick={resetGame}>
+        {t("accuracy.backToMenu", "Back to Accuracy Menu")}
+      </button>
+    </div>
+  );
+}
+
+function TooSlowScreen({ resetGame, t, styles }) {
+  return (
+    <div style={styles.centered}>
+      <h2 style={{ ...styles.title, ...styles.slow }}>
+        {t("accuracy.tooSlow", "Too Slow!")}
       </h2>
       <button style={styles.button} onClick={resetGame}>
         {t("accuracy.backToMenu", "Back to Accuracy Menu")}

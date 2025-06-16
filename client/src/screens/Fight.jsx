@@ -317,7 +317,7 @@ function Fight() {
       <div style={styles.buttonGroup}>
         <button style={styles.button} onClick={() => setHidePunches(v => !v)}>{t("fight.hide")}</button>
         <button style={styles.button} onClick={() => setFightState("fighting")}>▶</button>
-        <button style={styles.button} onClick={() => setFlipLayout(v => !v)}>{t("fight.switch")}</button>
+        {/* <button style={styles.button} onClick={() => setFlipLayout(v => !v)}>{t("fight.switch")}</button> */}
         <button style={styles.button} onClick={resetFight}>{t("fight.stop")}</button>
       </div>
     </div>

@@ -14,7 +14,7 @@ const int pinTop    = 33;  // Left & Right Uppercut
 // Individual thresholds
 const int thresholdRight = 4090;
 const int thresholdLeft  = 4090;
-const int thresholdFront = 4050;  // jab/cross
+const int thresholdFront = 4090;  // jab/cross
 const int thresholdTop   = 4090;  // uppercuts
 
 unsigned long lastPunchTime = 0;

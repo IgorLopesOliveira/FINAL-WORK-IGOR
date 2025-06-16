@@ -208,7 +208,7 @@ function Memorize() {
   useEffect(() => {
     if (phase === "input" && currentIndex === combo.length && combo.length > 0) {
       setTimeout(() => {
-        if (combo.length === 10) {
+        if (combo.length === 5) {
           setPhase("win");
         } else {
           setTimeout(() => {
