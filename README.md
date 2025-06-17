@@ -112,3 +112,5 @@ This project is licensed under the IGOR LOPES OLIVEIRA License
 
 
 ---
+
+This project software was mainly made with the help of Copiltot
